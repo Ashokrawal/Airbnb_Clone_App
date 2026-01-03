@@ -1,0 +1,12 @@
+# Ignore dependencies
+node_modules/
+server/node_modules/
+client/node_modules/
+
+# Ignore secrets
+.env
+server/.env
+client/.env
+
+# Ignore build files
+dist/
