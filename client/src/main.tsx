@@ -9,14 +9,17 @@ import App from "./App.tsx";
 // Also, ensure the file names match (UserProvider vs UserProviders)
 import { UserProvider } from "@/providers/UserProvider";
 import { PlaceProvider } from "@/providers/PlaceProvider";
+import { SearchProvider } from "./providers/SearchProvider";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <UserProvider>
       <PlaceProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <SearchProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </SearchProvider>
       </PlaceProvider>
     </UserProvider>
   </React.StrictMode>

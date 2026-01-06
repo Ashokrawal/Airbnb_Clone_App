@@ -1,0 +1,182 @@
+/* --- Footer Wrapper & Responsive Padding --- */
+.footer-wrapper {
+  width: 100%;
+  background-color: #f7f7f7;
+  border-top: 1px solid #ebebeb;
+  font-family:
+    "Airbnb Cereal VF",
+    Circular,
+    -apple-system,
+    BlinkMacSystemFont,
+    Roboto,
+    sans-serif;
+  color: #222222;
+  -webkit-font-smoothing: antialiased;
+}
+
+.footer-content {
+  max-width: 100%; /* Matches IndexPage */
+  margin: 0 auto;
+  padding: 24px 16px; /* Mobile */
+}
+
+@media (min-width: 768px) {
+  .footer-content {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .footer-content {
+    padding: 48px 80px;
+  }
+}
+
+/* --- Links Grid --- */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.footer-column-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-link-item {
+  font-size: 14px;
+  color: #222222;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.footer-link-item:hover {
+  text-decoration: underline;
+}
+
+/* --- Divider --- */
+.footer-divider {
+  height: 1px;
+  background-color: #dddddd;
+  width: 100%;
+}
+
+/* --- Bottom Section --- */
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Left: Copyright & Legal */
+.footer-bottom-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .footer-bottom-left {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.bottom-legal-links {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 10px;
+}
+
+.bottom-legal-links li {
+  cursor: pointer;
+}
+
+.bottom-legal-links li:hover {
+  text-decoration: underline;
+}
+
+/* Dot separators for desktop legal links */
+@media (min-width: 768px) {
+  .bottom-legal-links li:not(:first-child)::before {
+    content: "·";
+    margin-right: 10px;
+    font-weight: bold;
+  }
+}
+
+/* Right: Language, Currency, Socials */
+.footer-bottom-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .footer-bottom-right {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+  }
+}
+
+.language-currency {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.globe-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.bold-link {
+  cursor: pointer;
+}
+
+.bold-link:hover {
+  text-decoration: underline;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 16px;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  fill: #222222;
+}

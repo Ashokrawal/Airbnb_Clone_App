@@ -1,0 +1,129 @@
+.search-page-container {
+  display: flex;
+  margin-top: 160px; /* Adjust based on your header height */
+  height: calc(100vh - 160px);
+  width: 100%;
+}
+
+/* Listings Left Column */
+.listings-column {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 24px 100px 24px;
+}
+
+.results-info h1 {
+  font-size: 32px;
+  margin: 8px 0 20px 0;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.filter-pill {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filter-pill:hover {
+  border-color: black;
+}
+
+/* Grid layout for search results (Vertical list) */
+.listings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.search-listing-card {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.image-wrapper {
+  width: 300px;
+  height: 200px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.listing-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #717171;
+}
+
+.listing-name {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 4px 0;
+}
+
+.amenities {
+  font-size: 14px;
+  color: #717171;
+  margin-top: 8px;
+}
+
+.price-bottom {
+  margin-top: auto;
+  text-align: right;
+}
+
+/* Map Right Column */
+.map-column {
+  flex: 0.8; /* Map takes roughly 40-45% of width */
+  position: sticky;
+  top: 160px;
+  height: 100%;
+  background: #f7f7f7;
+}
+
+/* Custom Price Tags on Map */
+.map-price-label {
+  background-color: white !important;
+  color: black !important;
+  font-weight: 800 !important;
+  padding: 4px 10px !important;
+  border-radius: 28px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18) !important;
+  border: 1px solid #ddd !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 1128px) {
+  .map-column {
+    display: none;
+  } /* Hide map on tablets and mobile like Airbnb */
+  .image-wrapper {
+    width: 100%;
+    height: 250px;
+  }
+  .search-listing-card {
+    flex-direction: column;
+  }
+}

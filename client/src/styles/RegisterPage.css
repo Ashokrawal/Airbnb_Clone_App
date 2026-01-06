@@ -1,55 +1,145 @@
-.register-container {
-  margin-top: 1rem;
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: space-around;
-  padding: 1rem;
-}
-
-.register-box {
-  margin-bottom: 10rem;
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 400px;
+  z-index: 1000;
+  background-color: #fff;
+  border-bottom: 1px solid #ebebeb;
+  padding: 16px 0;
+  transition: box-shadow 0.2s ease;
 }
 
-.register-title {
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 1rem;
+.header-shadow {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Logo */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #ff385c;
+}
+
+.airbnb-logo {
+  height: 32px;
+  width: 32px;
+  fill: currentColor;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+/* User Pill Button */
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 5px 5px 12px;
+  border: 1px solid #dddddd;
+  border-radius: 21px;
+  background-color: white;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.user-pill:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+}
+
+.hamburger-icon {
+  width: 16px;
+  height: 16px;
+  color: #222222;
+}
+
+.avatar-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #717171;
+  color: white;
+  overflow: hidden;
+}
+
+.user-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 240px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+  padding: 8px 0;
+  z-index: 1001;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.menu-item {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #222222;
+  font-size: 14px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: #f7f7f7;
+}
+
+.menu-item.bold {
   font-weight: 600;
 }
 
-.register-form input {
-  width: 100%;
-  border: 1px solid #dddddd;
-  margin: 0.5rem 0;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
-  font-size: 1rem;
-}
-
-.btn-primary {
-  width: 100%;
-  background-color: #f5385d;
-  color: white;
-  padding: 0.75rem;
-  border-radius: 1rem;
+hr {
   border: none;
-  cursor: pointer;
-  font-weight: bold;
-  margin: 0.5rem 0;
+  border-top: 1px solid #ebebeb;
+  margin: 8px 0;
 }
 
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-
-.line {
-  height: 1px;
-  background-color: #dddddd;
-  flex-grow: 1;
+@media (max-width: 768px) {
+  .logo-text {
+    display: none;
+  }
+  .header-container {
+    padding: 0 24px;
+  }
 }

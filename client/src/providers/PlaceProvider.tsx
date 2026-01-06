@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode } from "react";
+import React, { createContext, type ReactNode } from "react";
 import { useProvidePlaces } from "@/hooks/index.js";
 
 // 1. Define what a 'Place' looks like (Adjust based on your API)
@@ -36,7 +36,7 @@ interface PlaceProviderProps {
 }
 
 export const PlaceProvider: React.FC<PlaceProviderProps> = ({ children }) => {
-  const allPlaces = useProvidePlaces();
+  const allPlaces = useProvidePlaces() as PlaceContextType;
 
   return (
     <PlaceContext.Provider value={allPlaces}>{children}</PlaceContext.Provider>

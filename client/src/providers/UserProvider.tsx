@@ -1,4 +1,4 @@
-import { createContext, ReactNode } from "react";
+import { createContext, type ReactNode } from "react";
 import { useProvideAuth } from "@/hooks/index.js";
 
 interface User {
@@ -21,7 +21,7 @@ export const UserContext = createContext<AuthContextType>(
 );
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const auth = useProvideAuth();
+  const auth = useProvideAuth() as AuthContextType;
 
   return <UserContext.Provider value={auth}>{children}</UserContext.Provider>;
 };
