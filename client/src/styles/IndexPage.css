@@ -1,0 +1,202 @@
+/* --- Root & Global Styles --- */
+.airbnb-page-wrapper {
+  max-width: 100%; /* Changed from 1800px to ensure it fills widescreen */
+  margin: 0 auto;
+  padding: 24px 16px;
+  /* Official Airbnb Font Stack */
+  font-family:
+    "Airbnb Cereal VF",
+    Circular,
+    -apple-system,
+    BlinkMacSystemFont,
+    Roboto,
+    "Helvetica Neue",
+    sans-serif;
+  color: #222222;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 768px) {
+  .airbnb-page-wrapper {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .airbnb-page-wrapper {
+    padding: 48px 80px;
+  }
+}
+
+/* --- Typography & Headers --- */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 26px;
+  }
+}
+
+/* --- Listing Card & Image --- */
+.listing-card {
+  width: 100%;
+  cursor: pointer;
+}
+
+.image-container {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #f3f3f3;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s cubic-bezier(0.2, 0.96, 0.34, 1);
+}
+
+@media (hover: hover) {
+  .listing-card:hover img {
+    transform: scale(1.05);
+  }
+}
+
+/* --- Text Details (The Airbnb "Look") --- */
+.listing-info {
+  padding-top: 12px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.location-title {
+  font-weight: 600; /* Airbnb uses 600 for semi-bold titles */
+  font-size: 15px;
+  line-height: 19px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 5px;
+}
+
+.rating-pill {
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 10px;
+}
+
+.subtitle {
+  color: #717171;
+  font-size: 12px;
+  line-height: 19px;
+  font-weight: 400;
+  margin: 1px 0;
+}
+
+.subtitle2 {
+  color: #717171;
+  font-size: 12px;
+  line-height: 19px;
+  font-weight: 400;
+  margin: 1px 0;
+}
+
+.price-row {
+  margin-top: 6px;
+  font-size: 15px;
+  line-height: 19px;
+}
+
+.price-bold {
+  font-weight: 600; /* Airbnb specific weight for price */
+}
+
+/* --- Navigation & Arrows --- */
+.custom-nav-container {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #b0b0b0; /* Airbnb uses a slightly darker gray than #d1 */
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.nav-btn:hover {
+  border-color: #222222;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.nav-icon {
+  width: 12px;
+  height: 12px;
+  stroke-width: 4px;
+}
+
+.swiper-button-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Extras --- */
+.hide-on-mobile {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .hide-on-mobile {
+    display: flex !important;
+  }
+}
+
+.section-spacer {
+  margin-top: 48px;
+}
+
+.heart-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  z-index: 2;
+}
+
+.heart-button svg {
+  width: 24px;
+  height: 24px;
+  fill: rgba(0, 0, 0, 0.4);
+  stroke: white;
+  stroke-width: 2px;
+}
