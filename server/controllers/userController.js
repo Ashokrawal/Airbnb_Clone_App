@@ -127,3 +127,35 @@ export const logout = async (req, res) => {
   });
   res.status(200).json({ success: true, message: "Logged out" });
 };
+
+// 7. Get All Images from a Folder
+// controllers/userController.js
+// controllers/userController.js
+export const getImagesByFolder = async (req, res) => {
+  try {
+    // Try the path without the "home" dashboard name
+    const folderPath = "airbnb/photos";
+
+    const result = await cloudinary.api.resources({
+      type: "upload",
+      prefix: folderPath,
+      max_results: 50,
+    });
+
+    const images = result.resources.map((file) => ({
+      url: file.secure_url,
+      publicId: file.public_id,
+    }));
+
+    res.status(200).json({
+      success: true,
+      count: images.length,
+      images,
+    });
+  } catch (error) {
+    console.error("Cloudinary Error:", error);
+    res
+      .status(500)
+      .json({ message: "Could not fetch images", error: error.message });
+  }
+};
