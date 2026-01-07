@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/index";
 import SearchBar from "./SearchBar";
 import "../styles/Header.css";
+import LoginDropBoxBtn from "./LoginDropBoxBtn";
 
 interface User {
   id: string;
@@ -17,6 +18,7 @@ export const Header: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +28,21 @@ export const Header: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // If clicking outside the menuRef container, close the menu
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMenuOpen]);
 
   return (
     <>
@@ -65,10 +82,11 @@ export const Header: React.FC = () => {
             )}
           </div>
 
-          {/* RIGHT: User Pill - Disappears on scroll via nav-hidden class */}
+          {/* RIGHT: User Pill */}
           <div
             className={`header-right hide-on-mobile ${!isExpanded ? "nav-hidden" : ""}`}
             ref={menuRef}
+            style={{ position: "relative" }} // This ensures the menu stays attached to the pill
           >
             <div
               className="user-pill"
@@ -91,6 +109,48 @@ export const Header: React.FC = () => {
                 )}
               </div>
             </div>
+
+            {/* --- ADD THIS BLOCK BELOW --- */}
+            {isMenuOpen && (
+              <div className="desktop-dropdown">
+                {!user ? (
+                  <>
+                    <div className="dropdown-section">
+                      <Link
+                        to="/signup"
+                        className="bold"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Sign up
+                      </Link>
+                      <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                        Log in
+                      </Link>
+                    </div>
+                    <hr />
+                    <div className="dropdown-section">
+                      <Link to="/host" onClick={() => setIsOpen(false)}>
+                        Become a host
+                      </Link>
+                      <Link to="/help" onClick={() => setIsOpen(false)}>
+                        Help Center
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <div className="dropdown-section">
+                    <Link to="/profile" className="bold">
+                      Profile
+                    </Link>
+                    <Link to="/trips">Trips</Link>
+                    <hr />
+                    <button onClick={() => logout()} className="logout-btn">
+                      Log out
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* MOBILE SEARCH - Always simplified on small screens */}
@@ -133,12 +193,14 @@ export const Header: React.FC = () => {
           </svg>
           <span>Wishlists</span>
         </Link>
-        <Link to="/login" className="nav-item">
+
+        <button className="nav-item">
           <svg viewBox="0 0 32 32">
             <path d="M16 1a15 15 0 1 0 15 15A15 15 0 0 0 16 1zm0 28a13 13 0 1 1 13-13 13 13 0 0 1-13 13zM16 7a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 8a3 3 0 1 1 3-3 3 3 0 0 1-3 3z" />
           </svg>
+
           <span>Log in</span>
-        </Link>
+        </button>
       </nav>
     </>
   );
