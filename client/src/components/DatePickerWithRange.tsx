@@ -6,7 +6,7 @@ import { type DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/Button";
 import { Calendar } from "@/components/Calender";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/PopOver";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/Popover";
 
 // 1. Define the component props interface
 interface DatePickerWithRangeProps {

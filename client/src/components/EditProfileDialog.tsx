@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRef, useState, type ChangeEvent } from "react";
+import { useRef, useState, useEffect, type ChangeEvent } from "react";
 import { toast } from "react-toastify";
 
 import {
@@ -7,19 +7,19 @@ import {
   DialogContent,
   DialogFooter,
   DialogTrigger,
-} from "@/components/dialog";
+} from "@/components/Dialog";
 
-import { Input } from "@/components/input";
+import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
 import { Button } from "@/components/Button";
 import { Avatar, AvatarImage } from "@/components/Avatar";
 import { Loader2, PenSquare, Upload } from "lucide-react";
 import { useAuth } from "@/hooks";
 
-// 1. Define the User and API Response shapes
 interface User {
   name: string;
   picture?: string;
+  email?: string;
 }
 
 interface UpdateResponse {
@@ -35,9 +35,11 @@ const EditProfileDialog: React.FC = () => {
     updateUser: (data: any) => Promise<UpdateResponse>;
   };
 
-  // 2. Properly type the refs and state
   const uploadRef = useRef<HTMLInputElement>(null);
   const [picture, setPicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>(
+    user.picture
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState({
     name: user.name || "",
@@ -45,16 +47,24 @@ const EditProfileDialog: React.FC = () => {
     confirm_password: "",
   });
 
-  const handleImageClick = () => {
-    uploadRef.current?.click();
-  };
+  // Handle image preview and clean up memory leaks
+  useEffect(() => {
+    if (!picture) {
+      setPreviewUrl(user.picture);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(picture);
+    setPreviewUrl(objectUrl);
 
-  // 3. Type the event handlers
+    // Clean up memory when component unmounts or picture changes
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [picture, user.picture]);
+
+  const handleImageClick = () => uploadRef.current?.click();
+
   const handlePictureChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setPicture(file);
-    }
+    if (file) setPicture(file);
   };
 
   const handleUserData = (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,36 +76,44 @@ const EditProfileDialog: React.FC = () => {
     setLoading(true);
     const { name, password, confirm_password } = userData;
 
-    if (name.trim() === "") {
+    if (!name.trim()) {
       setLoading(false);
-      return toast.error("Name Can't be empty");
-    } else if (password !== confirm_password) {
+      return toast.error("Name can't be empty");
+    }
+
+    if (password && password !== confirm_password) {
       setLoading(false);
       return toast.error("Passwords don't match");
     }
 
     try {
       let pictureUrl = user.picture || "";
-
       if (picture) {
-        // Since 'picture' is a File object, upload it
         pictureUrl = await uploadPicture(picture);
       }
 
-      const userDetails = {
+      // Only send password if user intended to change it
+      const userDetails: any = {
         name: userData.name,
-        password: userData.password,
         picture: pictureUrl,
+        email: user.email, // Backend needs email to find the user
       };
+
+      if (password) userDetails.password = password;
 
       const res = await updateUser(userDetails);
       if (res.success) {
         setUser(res.user);
-        toast.success("Updated successfully!");
+        toast.success("Profile updated!");
+        // Clear passwords after success
+        setUserData((prev) => ({
+          ...prev,
+          password: "",
+          confirm_password: "",
+        }));
       }
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong!");
+      toast.error("Update failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -104,88 +122,102 @@ const EditProfileDialog: React.FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-blue-600 hover:bg-blue-600">
+        {/* Styled to be slim and professional */}
+        <Button
+          variant="outline"
+          className="border-zinc-800 text-zinc-800 hover:bg-zinc-50 rounded-lg px-4 py-2 text-sm font-semibold"
+        >
           <PenSquare className="mr-2 h-4 w-4" />
           Edit Profile
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
-        <div className="flex justify-center">
-          <div className="relative h-40 w-40 cursor-pointer overflow-hidden rounded-full bg-gray-200">
-            <div
-              className="absolute flex h-full w-full items-center justify-center bg-gray-200 hover:z-10"
-              onClick={handleImageClick}
-            >
-              <input
-                type="file"
-                className="hidden"
-                ref={uploadRef}
-                onChange={handlePictureChange}
-                accept="image/*"
-              />
-              <Upload height={50} width={50} color="#4e4646" />
+
+      <DialogContent className="sm:max-w-[450px] rounded-3xl p-8">
+        <div className="flex flex-col items-center gap-6">
+          <h2 className="text-2xl font-bold text-center">Edit personal info</h2>
+
+          {/* Avatar Upload UI */}
+          <div
+            className="relative group h-32 w-32 cursor-pointer"
+            onClick={handleImageClick}
+          >
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity rounded-full z-10">
+              <Upload size={24} />
             </div>
 
-            {/* Use URL.createObjectURL safely */}
-            <Avatar className="transition-all ease-in-out hover:z-0 hover:hidden h-full w-full">
-              <AvatarImage
-                src={picture ? URL.createObjectURL(picture) : user.picture}
+            <div className="h-full w-full rounded-full overflow-hidden border border-zinc-200 bg-zinc-100">
+              <img
+                src={previewUrl}
+                referrerPolicy="no-referrer"
                 alt="Profile Preview"
-                className="object-cover"
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src =
+                    `https://ui-avatars.com/api/?name=${user.name}`;
+                }}
               />
-            </Avatar>
+            </div>
+
+            <input
+              type="file"
+              className="hidden"
+              ref={uploadRef}
+              onChange={handlePictureChange}
+              accept="image/*"
+            />
           </div>
         </div>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
+        <div className="space-y-5 mt-6">
+          <div className="space-y-2">
+            <Label htmlFor="name">Legal Name</Label>
             <Input
               id="name"
               name="name"
               value={userData.name}
-              className="col-span-3"
               onChange={handleUserData}
+              placeholder="First and Last name"
+              className="h-12 rounded-xl focus-visible:ring-black"
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="password" className="text-right">
-              New Password
-            </Label>
-            <Input
-              id="password"
-              name="password"
-              value={userData.password}
-              className="col-span-3"
-              type="password"
-              onChange={handleUserData}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="confirm_password" className="text-right">
-              Confirm Password
-            </Label>
-            <Input
-              id="confirm_password"
-              name="confirm_password"
-              value={userData.confirm_password}
-              className="col-span-3"
-              type="password"
-              onChange={handleUserData}
-            />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="password">New Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={userData.password}
+                onChange={handleUserData}
+                className="h-12 rounded-xl"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirm_password">Confirm</Label>
+              <Input
+                id="confirm_password"
+                name="confirm_password"
+                type="password"
+                value={userData.confirm_password}
+                onChange={handleUserData}
+                className="h-12 rounded-xl"
+              />
+            </div>
           </div>
         </div>
-        <DialogFooter>
+
+        <DialogFooter className="mt-8">
           <Button
             disabled={loading}
-            type="submit"
-            className="w-full"
             onClick={handleSaveChanges}
+            className="w-full h-12 bg-zinc-900 hover:bg-black text-white rounded-xl font-bold text-lg"
           >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Save changes
+            {loading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              "Save changes"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

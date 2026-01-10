@@ -1,3 +1,21 @@
+/* Default style (Desktop/Large Screens) */
 .main-layout {
   padding-bottom: 200px;
+}
+
+/* Mobile style (Screens smaller than 768px) */
+@media (max-width: 768px) {
+  .main-layout {
+    padding-bottom: 150px;
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.layout-box {
+  height: 100vh;
 }

@@ -1,0 +1,142 @@
+.hosting-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 100px;
+}
+
+/* HERO */
+.hosting-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 0;
+  gap: 40px;
+}
+
+.hero-content {
+  flex: 1;
+}
+.hero-title {
+  font-size: 64px;
+  font-weight: 800;
+  color: #ff385c;
+  margin-bottom: 8px;
+}
+.hero-subtitle {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 32px;
+}
+.highlight-price {
+  text-decoration: underline;
+}
+
+.primary-cta {
+  background: linear-gradient(to right, #e61e4d 0%, #e31c5f 50%, #d70466 100%);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.hero-image-box {
+  flex: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 500px;
+}
+.hero-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* STEPS */
+.section-heading {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 80px 0 40px;
+  text-align: center;
+}
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.step-card {
+  border-top: 1px solid #ddd;
+  padding-top: 24px;
+}
+.step-num {
+  font-size: 24px;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 12px;
+}
+.step-card h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+.step-card p {
+  color: #717171;
+  line-height: 1.5;
+}
+
+/* AIRCOVER */
+.aircover-banner {
+  background: #f7f7f7;
+  padding: 60px;
+  border-radius: 24px;
+  margin-top: 100px;
+}
+.aircover-logo {
+  font-size: 40px;
+  font-weight: 900;
+}
+.aircover-logo .red {
+  color: #ff385c;
+}
+.aircover-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 40px;
+}
+.aircover-item h4 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.aircover-item p {
+  color: #717171;
+  font-size: 14px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hosting-hero {
+    flex-direction: column;
+    padding: 40px 0;
+    text-align: center;
+  }
+  .hero-title {
+    font-size: 40px;
+  }
+  .hero-subtitle {
+    font-size: 24px;
+  }
+  .hero-image-box {
+    height: 300px;
+    width: 100%;
+  }
+  .steps-grid,
+  .aircover-grid {
+    grid-template-columns: 1fr;
+  }
+  .section-heading {
+    font-size: 32px;
+  }
+}

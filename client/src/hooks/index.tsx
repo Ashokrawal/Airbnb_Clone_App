@@ -19,7 +19,7 @@ export interface User {
 
 export interface Place {
   id: string;
-  _id?: string; // Supporting both id formats if necessary
+  _id?: string;
   title: string;
   address: string;
   photos: string[];
@@ -32,10 +32,12 @@ interface AuthResponse {
   message: string;
 }
 
+// FIXED: Added picture to the Google Payload
 interface GoogleJwtPayload {
   given_name: string;
   family_name: string;
   email: string;
+  picture: string;
 }
 
 // --- 2. USER AUTH HOOKS ---
@@ -98,17 +100,24 @@ export const useProvideAuth = () => {
     }
   };
 
+  // FIXED: Now correctly extracts and sends the picture URL
   const googleLogin = async (credential: string): Promise<AuthResponse> => {
-    const decoded = jwt_decode<GoogleJwtPayload>(credential);
     try {
+      const decoded = jwt_decode<GoogleJwtPayload>(credential);
+
       const { data } = await axiosInstance.post("user/google/login", {
         name: `${decoded.given_name} ${decoded.family_name}`,
         email: decoded.email,
+        picture: decoded.picture, // THE FIX IS HERE
       });
+
       if (data.user && data.token) handleAuthSuccess(data.user, data.token);
       return { success: true, message: "Login successful" };
     } catch (error: any) {
-      return { success: false, message: error.message };
+      return {
+        success: false,
+        message: error.response?.data?.message || error.message,
+      };
     }
   };
 
@@ -184,7 +193,6 @@ export const useProvidePlaces = () => {
   const getPlaces = async () => {
     try {
       const { data } = await axiosInstance.get("/places");
-      // Adjust this line if your API returns { places: [...] } or just [...]
       setPlaces(data.places || data);
     } catch (error) {
       console.error("Error fetching places", error);
@@ -222,7 +230,6 @@ export const useProvideSearch = () => {
     guests: { adults: 0, children: 0, infants: 0, pets: 0 },
   });
 
-  // set PLACES
   const setPlace = (location: string) => {
     setSearchData((prev) => ({
       ...prev,
@@ -230,7 +237,6 @@ export const useProvideSearch = () => {
     }));
   };
 
-  // Helper to update specific date fields
   const setDates = (type: "checkIn" | "checkOut", value: string) => {
     setSearchData((prev) => ({
       ...prev,

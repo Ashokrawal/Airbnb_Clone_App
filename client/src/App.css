@@ -1,0 +1,142 @@
+/* 1. Global Reset & Professional Font Stack */
+:root {
+  --airbnb-font:
+    "Airbnb Cereal VF", Circular, -apple-system, BlinkMacSystemFont, Roboto,
+    "Helvetica Neue", sans-serif;
+  --text-main: #222222;
+  --text-muted: #717171;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  /* Applying your Airbnb font globally */
+  font-family: var(--airbnb-font);
+  color: var(--text-main);
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.43; /* Airbnb standard line height */
+}
+
+/* 2. Form Elements Fix 
+   By default, inputs and buttons don't inherit font-family */
+input,
+button,
+textarea,
+select,
+span,
+div {
+  font-family: var(--airbnb-font);
+}
+
+/* 3. Global Responsive Container 
+   Replacing .airbnb-page-wrapper with a reusable global class */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px; /* Mobile padding */
+}
+
+@media (min-width: 744px) {
+  .container {
+    padding: 0 40px; /* Tablet */
+  }
+}
+
+@media (min-width: 1128px) {
+  .container {
+    padding: 0 80px; /* Desktop widescreen */
+  }
+}
+
+/* 4. Global Typography Helpers */
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-bold {
+  font-weight: 600;
+}
+
+.text-muted {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* 5. Modern Button Reset (Responsive & Professional) */
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  transition: transform 0.1s ease;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* Foundation for professional layout */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    "Circular",
+    -apple-system,
+    BlinkMacSystemFont,
+    Roboto,
+    "Helvetica Neue",
+    sans-serif;
+  color: #222222;
+  background-color: #fff;
+}
+
+.container-padding-top {
+  padding-top: 80px; /* Adjust based on your Navbar height */
+}
+
+/* Ensure images don't break layouts */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  main,
+  .page-container {
+    padding-bottom: 80px; /* Room for the mobile nav */
+  }
+}
+
+/* 1. Define the fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px); /* Slight lift effect */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 2. Apply it to your main page wrapper */
+.airbnb-page-wrapper,
+.place-page-wrapper,
+.wishlist-container {
+  animation: fadeIn 0.5s ease-out forwards;
+}

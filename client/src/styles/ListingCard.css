@@ -19,25 +19,14 @@
 
 @media (min-width: 768px) {
   .airbnb-page-wrapper {
-    padding: 20px;
+    padding: 40px;
   }
 }
 
 @media (min-width: 1200px) {
   .airbnb-page-wrapper {
-    padding: 48px 20px;
+    padding: 48px 80px;
   }
-}
-
-/* Add this to ensure the slider itself doesn't have extra internal padding */
-.swiper {
-  padding-left: 2px;
-  padding-right: 2px;
-  /* Optional: lets hearts/shadows pop out slightly */
-}
-
-.slider-section {
-  margin-bottom: 48px; /* Use margin for spacing between sections, not padding */
 }
 
 /* --- Typography & Headers --- */
@@ -113,7 +102,6 @@
   font-size: 12px;
   font-weight: 400;
   margin-left: 10px;
-  color: #717171;
 }
 
 .subtitle {
@@ -133,7 +121,7 @@
 }
 
 .price-row {
-  margin-top: 2px;
+  margin-top: 6px;
   font-size: 15px;
   line-height: 19px;
 }
@@ -211,78 +199,4 @@
   fill: rgba(0, 0, 0, 0.4);
   stroke: white;
   stroke-width: 2px;
-}
-
-.heart-button {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  padding: 0;
-  outline: none;
-  transition: transform 0.2s ease;
-}
-
-/* Airbnb "Pop" effect when clicking */
-.heart-button:active {
-  transform: scale(0.9);
-}
-
-.heart-button svg {
-  width: 24px;
-  height: 24px;
-  display: block;
-  overflow: visible;
-  /* Default inactive state */
-  fill: rgba(0, 0, 0, 0.45);
-  stroke: #ffffff;
-  stroke-width: 2px;
-  transition:
-    fill 0.3s ease,
-    stroke 0.3s ease;
-}
-
-/* Active State (Favorited) */
-.heart-button.is-active svg {
-  fill: #ff385c; /* Official Airbnb Pink */
-  stroke: #ff385c;
-}
-
-/* Hover effect for desktop */
-@media (hover: hover) {
-  .heart-button:hover svg {
-    transform: scale(1.05);
-    fill: rgba(0, 0, 0, 0.6);
-  }
-
-  .heart-button.is-active:hover svg {
-    fill: #e31c5f; /* Slightly darker pink on hover */
-    stroke: #e31c5f;
-  }
-}
-
-/* --- Link Reset --- */
-.card-link {
-  text-decoration: none;
-  color: inherit; /* Inherits #222222 from .airbnb-page-wrapper */
-  display: block;
-}
-
-.card-link:hover,
-.card-link:focus,
-.card-link:active {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Specific Heading Override to be safe */
-.section-title {
-  color: #222222;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0;
 }

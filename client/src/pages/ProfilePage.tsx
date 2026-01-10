@@ -1,29 +1,32 @@
-import * as React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { Navigate, useParams } from "react-router-dom";
-
-import AccountNavigation from "@/components/AccontNavigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
+import { Navigate, useParams, Link } from "react-router-dom";
 import { Button } from "@/components/Button";
-
-import PlacesPage from "./PlacesPage";
-import { useAuth } from "@/hooks"; // Using the barrel export
-import { LogOut, Mail, Text } from "lucide-react";
+import { useAuth } from "@/hooks";
+import { LogOut, Mail, User, ShieldCheck, Camera } from "lucide-react";
 import EditProfileDialog from "@/components/EditProfileDialog";
+import "@/styles/ProfilePage.css";
+
+// Interface for TypeScript safety
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  picture?: string;
+}
 
 const ProfilePage: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth() as {
+    user: UserProfile | null;
+    logout: () => any;
+    loading: boolean;
+  };
 
-  // 1. Type the redirect state - either a path string or null
   const [redirect, setRedirect] = useState<string | null>(null);
 
-  // 2. useParams is generic, we expect 'subpage'
   let { subpage } = useParams<{ subpage: string }>();
 
-  if (!subpage) {
-    subpage = "profile";
-  }
+  if (!subpage) subpage = "profile";
 
   const handleLogout = async () => {
     const response = await logout();
@@ -35,67 +38,129 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  // 3. Handle the "null" user case early (Type Guard)
-  if (!user && !redirect) {
-    return <Navigate to={"/login"} />;
+  // 1. Wait for the hook to finish reading localStorage
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-800" />
+      </div>
+    );
   }
 
-  if (redirect) {
-    return <Navigate to={redirect} />;
-  }
+  // 2. Now it's safe to redirect if there's still no user
+  if (!user && !redirect) return <Navigate to={"/login"} />;
 
-  // At this point, TS knows 'user' is NOT null because of the check above
+  if (redirect) return <Navigate to={redirect} />;
+
+  console.log("Current User Data:", user);
+  console.log("Profile Picture URL:", user?.picture);
+
   return (
-    <div>
-      <AccountNavigation />
-      {subpage === "profile" && user && (
-        <div className="m-4 flex flex-col items-center gap-8 rounded-[10px] p-4 sm:h-1/5 sm:flex-row sm:items-stretch lg:gap-28 lg:pl-32 lg:pr-20">
-          <div className="flex h-40 w-40 justify-center rounded-full bg-gray-200 p-4 sm:h-72 sm:w-72 md:h-96 md:w-96">
-            <Avatar className="h-full w-full">
-              {user.picture ? (
-                <AvatarImage src={user.picture} className="object-cover" />
-              ) : (
-                <AvatarImage
-                  src="https://res.cloudinary.com/rahul4019/image/upload/v1695133265/pngwing.com_zi4cre.png"
-                  className="object-cover"
-                />
-              )}
-              <AvatarFallback>
-                {user.name.slice(0, 1).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </div>
+    <main className="profile-page-wrapper">
+      <div className="profile-container">
+        {subpage === "profile" && user && (
+          <div className="profile-grid">
+            {/* SIDEBAR: Professional Airbnb Slim Card */}
+            <aside className="profile-sidebar">
+              <div className="id-card-slim">
+                <div className="avatar-section">
+                  <div className="native-avatar-wrapper">
+                    {user.picture ? (
+                      <img
+                        src={user.picture}
+                        referrerPolicy="no-referrer"
+                        alt={user.name}
+                        className="native-avatar-img"
+                        onError={(e) => {
+                          // Fallback if image still fails
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="avatar-initials">
+                        {user.name.slice(0, 1).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <button className="edit-avatar-badge" aria-label="Edit photo">
+                    <Camera size={14} />
+                  </button>
+                </div>
 
-          <div className="flex grow flex-col items-center gap-10 sm:items-start sm:justify-around sm:gap-0">
-            <div className="flex flex-col items-center gap-2 sm:items-start">
-              <div className="flex items-center gap-2">
-                <Text height="18" width="18" />
-                <div className="text-xl">
-                  <span>Name: </span>
-                  <span className="text-gray-600">{user.name}</span>
+                <h1 className="user-title">{user.name.split(" ")[0]}</h1>
+                <p className="role-label">Guest</p>
+              </div>
+
+              <div className="stats-box-slim">
+                <div className="stat-row">
+                  <span className="stat-val">0</span>
+                  <span className="stat-lbl">Reviews</span>
+                </div>
+                <div className="stat-divider-v" />
+                <div className="stat-row">
+                  <span className="stat-val">1</span>
+                  <span className="stat-lbl">Year</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail height="18" width="18" />
-                <div className="text-xl">
-                  <span>Email: </span>
-                  <span className="text-gray-600">{user.email}</span>
+
+              <div className="verification-card">
+                <h3>{user.name.split(" ")[0]}’s confirmed info</h3>
+                <div className="v-item">
+                  <ShieldCheck size={18} strokeWidth={2.5} />
+                  <span>Email address</span>
                 </div>
               </div>
-            </div>
+            </aside>
 
-            <div className="flex w-full justify-around sm:justify-end sm:gap-5 md:gap-10">
-              <EditProfileDialog />
-              <Button variant="secondary" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
-            </div>
+            {/* MAIN CONTENT AREA */}
+            <section className="profile-main-content">
+              <div className="header-flex">
+                <h2 className="profile-heading">About you</h2>
+                <EditProfileDialog />
+              </div>
+
+              <div className="info-stack">
+                <div className="info-block">
+                  <User className="info-icon-main" size={24} />
+                  <div className="info-content">
+                    <span className="info-tag">Legal Name</span>
+                    <p className="info-text-val">{user.name}</p>
+                  </div>
+                </div>
+
+                <div className="info-block">
+                  <Mail className="info-icon-main" size={24} />
+                  <div className="info-content">
+                    <span className="info-tag">Email Address</span>
+                    <p className="info-text-val">{user.email}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="action-row-bottom">
+                <Button
+                  variant="outline"
+                  className="logout-minimal"
+                  onClick={handleLogout}
+                >
+                  <LogOut size={16} className="mr-2" /> Log out
+                </Button>
+              </div>
+
+              <div className="host-cta-box">
+                <div className="host-cta-content">
+                  <h3>It's time to host</h3>
+                  <p>Earn extra income by sharing your home with travelers.</p>
+                </div>
+                <Link to="/account/places/new" className="host-cta-btn">
+                  List your space
+                </Link>
+              </div>
+            </section>
           </div>
-        </div>
-      )}
-      {subpage === "places" && <PlacesPage />}
-    </div>
+        )}
+      </div>
+    </main>
   );
 };
 

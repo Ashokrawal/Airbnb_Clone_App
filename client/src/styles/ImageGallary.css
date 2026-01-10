@@ -1,0 +1,357 @@
+/* ============================================
+   IMAGE GALLERY
+============================================ */
+.gallery-container {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 24px 0;
+  height: 400px;
+}
+
+@media (min-width: 768px) {
+  .gallery-container {
+    grid-template-columns: 1fr 1fr;
+    height: 450px;
+  }
+}
+
+.gallery-main {
+  grid-column: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .gallery-main {
+    grid-row: 1 / 3;
+  }
+}
+
+.gallery-side {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .gallery-side {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+  }
+}
+
+.gallery-side-item {
+  overflow: hidden;
+  height: 100%;
+}
+
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-img:hover {
+  transform: scale(1.05);
+}
+
+.show-all-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: white;
+  border: 1px solid #222;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.show-all-btn:hover {
+  background: #f7f7f7;
+  transform: scale(1.02);
+}
+
+/* ============================================
+   MAIN CONTENT LAYOUT
+============================================ */
+.place-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  margin-top: 48px;
+}
+
+@media (min-width: 1024px) {
+  .place-layout-grid {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 80px;
+  }
+}
+
+/* ============================================
+   DETAILS COLUMN
+============================================ */
+.place-details-column {
+  width: 100%;
+}
+
+.host-profile h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #222;
+}
+
+.host-profile p {
+  font-size: 16px;
+  color: #717171;
+  margin: 0;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid #ebebeb;
+  margin: 32px 0;
+}
+
+.description-section,
+.amenities-section {
+  margin: 32px 0;
+}
+
+.section-subtitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #222;
+}
+
+.description-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #222;
+  margin: 0;
+}
+
+.amenities-section h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: #222;
+}
+
+.amenities-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .amenities-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.amenity-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 16px;
+  color: #222;
+}
+
+.amenity-item span {
+  font-weight: 400;
+}
+
+/* ============================================
+   BOOKING SIDEBAR
+============================================ */
+.booking-sidebar {
+  width: 100%;
+}
+
+.sticky-wrapper {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .sticky-wrapper {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+.booking-widget-card {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #dddddd;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.price-header {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+.per-night {
+  font-size: 16px;
+  font-weight: 400;
+  color: #717171;
+}
+
+.booking-inputs-border {
+  border: 1px solid #b0b0b0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.booking-inputs-border:hover {
+  border-color: #222;
+}
+
+.date-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.input-box {
+  padding: 12px;
+  border-right: 1px solid #b0b0b0;
+}
+
+.input-box:last-child {
+  border-right: none;
+}
+
+.input-box label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+.input-box input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #222;
+  background: transparent;
+}
+
+.input-box input:focus {
+  outline: none;
+}
+
+.book-btn {
+  width: 100%;
+  background: linear-gradient(to right, #e61e4d 0%, #e31c5f 50%, #d70466 100%);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: transform 0.1s ease;
+}
+
+.book-btn:hover {
+  background: linear-gradient(to right, #d01346 0%, #c71955 50%, #b8045e 100%);
+}
+
+.book-btn:active {
+  transform: scale(0.98);
+}
+
+/* ============================================
+   ERROR STATE
+============================================ */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.error-content h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+.error-content p {
+  font-size: 16px;
+  color: #717171;
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  margin-top: 20px;
+  padding: 14px 24px;
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #000;
+  transform: translateY(-2px);
+}
+
+.back-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+============================================ */
+@media (max-width: 768px) {
+  .place-layout-grid {
+    gap: 32px;
+    margin-top: 32px;
+  }
+
+  .section-divider {
+    margin: 24px 0;
+  }
+
+  .booking-widget-card {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 12px 12px 0 0;
+    z-index: 100;
+    box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.12);
+  }
+}

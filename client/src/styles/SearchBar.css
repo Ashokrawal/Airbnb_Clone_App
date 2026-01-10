@@ -340,3 +340,56 @@
     width: 95%;
   }
 }
+
+.counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  gap: 15px;
+}
+
+.btn-counter {
+  /* Essential Shape & Border */
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #b0b0b0; /* Professional Grey */
+  background-color: transparent;
+
+  /* Centering the Symbol */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Typography */
+  color: #717171;
+  font-size: 18px;
+  cursor: pointer;
+
+  /* Smooth Hover Effect */
+  transition: all 0.2s ease;
+}
+
+.btn-counter:hover {
+  border-color: #222222;
+  color: #222222;
+}
+
+.btn-counter:active {
+  transform: scale(0.95); /* Slight "click" feel */
+}
+
+.btn-counter:disabled {
+  border-color: #ebebeb;
+  color: #ebebeb;
+  cursor: not-allowed;
+}
+
+.count {
+  font-family: inherit;
+  font-weight: 400;
+  color: #222222;
+  min-width: 20px;
+  text-align: center;
+}

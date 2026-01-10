@@ -7,7 +7,6 @@ import { useAuth } from "@/hooks";
 import axiosInstance from "@/utils/axios";
 import DatePickerWithRange from "./DatePickerWithRange";
 
-// 1. Define types for the Place and User
 interface Place {
   _id: string;
   price: number;
@@ -40,7 +39,7 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ place }) => {
     phone: "",
   });
   const [redirect, setRedirect] = useState<string>("");
-  const { user } = useAuth(); // Assuming useAuth returns { user: { name: string } | null }
+  const { user } = useAuth();
 
   const { noOfGuests, name, phone } = bookingData;
   const { _id: id, price } = place;
@@ -59,9 +58,6 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ place }) => {
         )
       : 0;
 
-  /**
-   * Typed event handler for input changes
-   */
   const handleBookingData = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setBookingData((prev) => ({
@@ -75,7 +71,6 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ place }) => {
       return setRedirect(`/login`);
     }
 
-    // Validation Logic
     if (numberOfNights < 1) {
       return toast.error("Please select valid dates");
     } else if (noOfGuests < 1) {
@@ -113,55 +108,93 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ place }) => {
   }
 
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-xl">
-      <div className="text-center text-xl">
-        Price: <span className="font-semibold">₹{place.price}</span> / per night
+    <div className="booking-widget-card">
+      {/* Price Header */}
+      <div className="price-header">
+        <span className="price-amount">₹{place.price.toLocaleString()}</span>
+        <span className="per-night"> / night</span>
       </div>
-      <div className="mt-4 rounded-2xl border">
-        <div className="flex w-full ">
+
+      {/* Date Selection */}
+      <div className="booking-inputs-border">
+        <div className="date-inputs">
           <DatePickerWithRange setDateRange={setDateRange} />
         </div>
-        <div className="border-t py-3 px-4">
-          <label className="text-sm font-semibold">Number of guests: </label>
+
+        {/* Number of Guests */}
+        <div className="input-box" style={{ borderTop: "1px solid #b0b0b0" }}>
+          <label>GUESTS</label>
           <input
             type="number"
             name="noOfGuests"
-            className="w-full mt-1 border rounded-lg px-2 py-1"
-            placeholder={`Max. guests: ${place.maxGuests}`}
+            placeholder={`Max ${place.maxGuests} guests`}
             min={1}
             max={place.maxGuests}
             value={noOfGuests}
             onChange={handleBookingData}
           />
         </div>
-        <div className="border-t py-3 px-4">
-          <label className="text-sm font-semibold">Your full name: </label>
+      </div>
+
+      {/* Guest Details */}
+      <div className="guest-details-section">
+        <div className="input-group">
+          <label className="input-label">Full Name</label>
           <input
             type="text"
             name="name"
-            className="w-full mt-1 mb-2 border rounded-lg px-2 py-1"
+            className="booking-input"
+            placeholder="Enter your full name"
             value={name}
             onChange={handleBookingData}
           />
-          <label className="text-sm font-semibold">Phone number: </label>
+        </div>
+
+        <div className="input-group">
+          <label className="input-label">Phone Number</label>
           <input
             type="tel"
             name="phone"
-            className="w-full mt-1 border rounded-lg px-2 py-1"
+            className="booking-input"
+            placeholder="Enter your phone number"
             value={phone}
             onChange={handleBookingData}
           />
         </div>
       </div>
-      <button onClick={handleBooking} className="primary mt-4 w-full">
-        Book this place
-        {numberOfNights > 0 && (
-          <span className="ml-1 font-bold">
-            {" "}
-            ₹{numberOfNights * place.price}
-          </span>
+
+      {/* Book Button */}
+      <button onClick={handleBooking} className="book-btn">
+        {numberOfNights > 0 ? (
+          <>
+            Reserve
+            <span style={{ marginLeft: "8px", fontWeight: 700 }}>
+              ₹{(numberOfNights * place.price).toLocaleString()}
+            </span>
+          </>
+        ) : (
+          "Check availability"
         )}
       </button>
+
+      {/* Price Breakdown */}
+      {numberOfNights > 0 && (
+        <div className="price-breakdown">
+          <div className="price-breakdown-row">
+            <span>
+              ₹{place.price.toLocaleString()} × {numberOfNights} nights
+            </span>
+            <span>₹{(numberOfNights * place.price).toLocaleString()}</span>
+          </div>
+          <div className="price-breakdown-divider"></div>
+          <div className="price-breakdown-row price-breakdown-total">
+            <span>Total</span>
+            <span>₹{(numberOfNights * place.price).toLocaleString()}</span>
+          </div>
+        </div>
+      )}
+
+      <p className="booking-notice">You won't be charged yet</p>
     </div>
   );
 };

@@ -1,0 +1,63 @@
+/* MOBILE BOOKING BAR */
+.mobile-booking-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #ddd;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 90;
+}
+
+.mobile-price {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.mobile-night {
+  font-size: 14px;
+  color: #717171;
+}
+
+.mobile-reserve-btn {
+  background: linear-gradient(to right, #e61e4d, #d70466);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* MODAL */
+.booking-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.booking-modal {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  padding: 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* VISIBILITY HELPERS */
+.show-on-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .show-on-mobile {
+    display: block;
+  }
+}

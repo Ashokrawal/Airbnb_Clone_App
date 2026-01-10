@@ -49,6 +49,7 @@ const SearchBar = () => {
       <div className="search-pill pill-big">
         <div className="pill-content-large">
           {/* WHERE SECTION */}
+
           <div
             className={`search-section-item first ${selected === "where" ? "is-selected" : ""}`}
             onClick={() => setSelected("where")}
@@ -177,6 +178,7 @@ const SearchBar = () => {
                     </div>
                     <div className="counter">
                       <button
+                        className="btn-counter"
                         onClick={() => updateGuests(item.id as any, "dec")}
                       >
                         -
@@ -189,6 +191,7 @@ const SearchBar = () => {
                         }
                       </span>
                       <button
+                        className="btn-counter"
                         onClick={() => updateGuests(item.id as any, "inc")}
                       >
                         +

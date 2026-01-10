@@ -13,7 +13,7 @@ const Layout = () => {
         <Header />
       </div>
 
-      <div className="mx-auto container-padding-top flex min-h-screen max-w-screen-xl flex-col">
+      <div className="layout">
         <Outlet />
         <Footer />
       </div>

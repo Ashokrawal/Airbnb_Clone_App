@@ -2,9 +2,15 @@ import React, { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
-
+import { jwtDecode } from "jwt-decode";
 import ProfilePage from "./ProfilePage";
 import { useAuth } from "@/hooks";
+
+interface GoogleUser {
+  name: string;
+  email: string;
+  picture: string;
+}
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -37,9 +43,11 @@ const LoginPage: React.FC = () => {
   };
 
   // 3. Type the Google Credential string
+
   const handleGoogleLogin = async (credential: string) => {
     try {
       const response = await auth.googleLogin(credential);
+
       if (response.success) {
         toast.success(response.message);
         setRedirect(true);
@@ -47,6 +55,7 @@ const LoginPage: React.FC = () => {
         toast.error(response.message);
       }
     } catch (err) {
+      console.error(err);
       toast.error("Google login failed");
     }
   };
@@ -95,6 +104,7 @@ const LoginPage: React.FC = () => {
         <div className="flex h-[50px] justify-center">
           <GoogleLogin
             onSuccess={(credentialResponse: CredentialResponse) => {
+              // credentialResponse.credential is the raw JWT string from Google
               if (credentialResponse.credential) {
                 handleGoogleLogin(credentialResponse.credential);
               }
@@ -104,6 +114,8 @@ const LoginPage: React.FC = () => {
             }}
             text="continue_with"
             width="350"
+            theme="outline"
+            shape="pill"
           />
         </div>
 

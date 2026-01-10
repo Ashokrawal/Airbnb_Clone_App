@@ -256,16 +256,22 @@
 }
 
 .dropdown-section a,
-.logout-btn {
+.logout-btn,
+.dropdown-link {
+  display: flex; /* Ensures vertical & horizontal alignment control */
+  align-items: center; /* Vertically centers the text */
+  width: 100%; /* Makes sure the hover effect covers the whole width */
   padding: 12px 16px;
   text-decoration: none;
   color: #222;
   font-size: 14px;
+  font-family: inherit; /* Professional touch: ensures buttons use the page font */
   transition: background 0.2s;
   text-align: left;
   border: none;
   background: none;
   cursor: pointer;
+  box-sizing: border-box; /* Prevents padding from breaking the width */
 }
 
 .dropdown-section a:hover {
@@ -280,4 +286,250 @@ hr {
   border: 0;
   border-top: 1px solid #ebebeb;
   margin: 8px 0;
+}
+
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: white;
+  border-top: 1px solid #ebebeb;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 2000;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  background: none;
+  border: none;
+  color: #717171; /* Default Gray */
+  font-size: 10px;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.nav-svg {
+  width: 24px;
+  height: 24px;
+  /* FORCE HOLLOW STYLE */
+  fill: none !important;
+  display: block;
+}
+
+/* --- ACTIVE STATE --- */
+.nav-item.active {
+  color: #ff385c !important; /* Airbnb Pink for Text */
+}
+
+.nav-item.active .nav-svg {
+  color: #ff385c !important; /* This changes the 'stroke' because of 'currentColor' */
+  fill: none !important; /* Ensures the inside stays hollow */
+}
+
+/* Update your existing .avatar-box */
+.avatar-box {
+  width: 32px; /* Standard Airbnb size */
+  height: 32px;
+  background-color: #717171;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Add this to handle the actual Google Image */
+.user-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures square images fill the circle without stretching */
+  display: block;
+}
+
+/* Add this below your .dropdown-section styles */
+.dropdown-section.greeting {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #222222;
+  cursor: default; /* Not a link */
+}
+
+.dropdown-section.greeting:hover {
+  background: none; /* No hover effect for the greeting */
+}
+
+/* Ensure all links and buttons in dropdown look identical */
+.dropdown-link,
+.dropdown-section a,
+.logout-btn {
+  text-align: left;
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  font-weight: 400;
+  color: #222222;
+  transition: background 0.2s ease;
+}
+
+.dropdown-link:hover,
+.dropdown-section a:hover,
+.logout-btn:hover {
+  background-color: #f7f7f7;
+}
+
+/* --- Avatar Core Styles --- */
+
+/* The Root container ensures a perfect circle and handles loading states */
+.avatar-root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  overflow: hidden;
+  user-select: none;
+  border-radius: 9999px;
+  background-color: #f7f7f7; /* Light gray while loading */
+}
+
+/* Ensure the image fills the space without stretching */
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* The Fallback - Dark and modern for initials */
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #222222; /* Airbnb's signature dark text color */
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  /* Font size is handled by parent container or inline classes */
+}
+
+/* --- Header "User Pill" Styles --- */
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 4px 4px 12px;
+  border: 1px solid #dddddd;
+  border-radius: 21px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.user-pill:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+}
+
+.user-pill-icon {
+  color: #595959;
+}
+
+.placeholder-user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-items: center;
+}
+
+.avatar-box {
+  /* Your existing perfect styles... */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Crucial for keeping the circle sharp */
+}
+
+/* Ensure the Radix Root inherits the parent's size */
+.user-img {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit; /* Matches the avatar-box rounding */
+  display: flex;
+}
+
+/* Make sure the initials/SVG look premium */
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  background-color: #222222; /* Matches Airbnb's dark theme */
+  color: #ffffff;
+  user-select: none;
+}
+
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: #ffffff;
+  border-top: 1px solid #ebebeb;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom); /* For iPhone notches */
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #717171; /* Unselected gray */
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex: 1;
+  transition: color 0.2s ease;
+}
+
+.nav-item.active {
+  color: #ff385c; /* Airbnb Red */
+}
+
+.nav-svg {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+}
+
+.nav-item span {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.mobile-avatar-container {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+/* Ensure images don't stretch */
+.mobile-avatar-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

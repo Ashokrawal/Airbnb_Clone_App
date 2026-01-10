@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "@react-oauth/google";
 import "../styles/RegisterPage.css";
+import { PlacePage } from "./BookingWidget";
 
 // Use the alias we configured
 import { useAuth } from "@/hooks/index";

@@ -1,8 +1,9 @@
 import { TailSpin } from "react-loader-spinner";
+import "../styles/Layout.css";
 
 const Spinner = () => {
   return (
-    <div className="absolute inset-1/2 flex flex-col items-center justify-center">
+    <div className="spinner">
       <TailSpin
         height={100}
         width={200}

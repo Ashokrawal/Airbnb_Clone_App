@@ -1,0 +1,123 @@
+.messages-layout {
+  display: flex;
+  height: calc(100vh - 80px); /* Adjust based on header height */
+  overflow: hidden;
+}
+
+.inbox-sidebar {
+  width: 380px;
+  border-right: 1px solid #ebebeb;
+  display: flex;
+  flex-direction: column;
+}
+
+.inbox-top {
+  padding: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.conversation-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.conv-item {
+  display: flex;
+  padding: 20px;
+  gap: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f9f9f9;
+}
+
+.conv-item.active {
+  background-color: #f7f7f7;
+  border-left: 4px solid #222;
+}
+
+.conv-avatar {
+  width: 48px;
+  height: 48px;
+  background: #222;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* Chat Window Section */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.chat-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #ebebeb;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.msg-received,
+.msg-sent {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 15px;
+}
+
+.msg-received {
+  align-self: flex-start;
+  background: #f0f0f0;
+}
+
+.msg-sent {
+  align-self: flex-end;
+  background: #222;
+  color: white;
+}
+
+.chat-input-area {
+  padding: 20px 24px;
+  border-top: 1px solid #ebebeb;
+  display: flex;
+  gap: 12px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  outline: none;
+}
+
+/* RESPONSIVE BREAKPOINT */
+@media (max-width: 768px) {
+  .inbox-sidebar {
+    width: 100%; /* Take full width on mobile list view */
+    display: none; /* In a real app, use state to toggle sidebar vs chat */
+  }
+
+  /* When conversation is active, hide sidebar and show chat */
+  .chat-window {
+    width: 100%;
+  }
+
+  .messages-layout {
+    height: calc(100vh - 65px); /* Mobile nav height */
+  }
+}

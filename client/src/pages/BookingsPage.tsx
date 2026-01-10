@@ -7,6 +7,7 @@ import PlaceImg from "@/components/PlaceImage";
 import BookingDates from "@/components/BookingDates";
 import Spinner from "@/components/Spinner";
 import axiosInstance from "@/utils/axios";
+import "../styles/BookingsPage.css";
 
 // Import the new CSS file
 
