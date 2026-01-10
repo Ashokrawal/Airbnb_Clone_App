@@ -19,3 +19,58 @@
 .layout-box {
   height: 100vh;
 }
+
+/* Ensure the root/body doesn't have weird spacing */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* The wrapper becomes a flex column */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full screen height */
+}
+
+/* Header spacing adjustments */
+.main-header-wrapper {
+  padding-bottom: 20px; /* Reduced from 200px to keep header tight */
+}
+
+/* 🔥 The "Fixed Height" Logic */
+.app-main {
+  flex: 1; /* Grows to fill available space */
+  width: 100%;
+  max-width: 1280px; /* Professional standard container width */
+  margin: 0 auto;
+  padding: 0 20px; /* Responsive side padding */
+
+  /* When empty, this maintains the layout structure */
+  min-height: 80vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .app-main {
+    min-height: 80vh; /* Slightly shorter for mobile screens */
+    padding: 0 15px;
+  }
+
+  .main-header-wrapper {
+    padding-bottom: 10px;
+  }
+}
+
+/* Spinner helper for when content is loading */
+.spinner-container {
+  display: flex;
+  flex: 1; /* Fills the 80vh main area */
+  justify-content: center;
+  align-items: center;
+}

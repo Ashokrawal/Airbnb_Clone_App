@@ -180,3 +180,49 @@
   cursor: pointer;
   fill: #222222;
 }
+
+.footer-wrapper {
+  width: 100%;
+  background-color: #f7f7f7;
+  border-top: 1px solid #ebebeb;
+  font-family:
+    "Airbnb Cereal VF",
+    Circular,
+    -apple-system,
+    BlinkMacSystemFont,
+    Roboto,
+    sans-serif;
+  color: #222222;
+  -webkit-font-smoothing: antialiased;
+
+  /* Fix CLS */
+  min-height: 400px; /* reserve space */
+}
+
+.footer-content {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+@media (min-width: 768px) {
+  .footer-content {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .footer-content {
+    padding: 48px 80px;
+  }
+}
+
+/* Bottom section fix */
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+  gap: 20px;
+
+  min-height: 80px; /* reserve space to avoid shifting */
+}

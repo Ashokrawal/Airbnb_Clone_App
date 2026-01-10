@@ -1,4 +1,5 @@
 import React, { type ChangeEvent } from "react";
+import "../styles/Perks.css";
 
 // 1. Define the structure of a Single Perk
 interface PerkItem {
@@ -62,11 +63,7 @@ const Perks: React.FC<PerksProps> = ({ selected, handleFormData }) => {
         return (
           <label
             key={perk.id}
-            className={`flex cursor-pointer items-center gap-2 rounded-2xl border p-4 transition-all hover:bg-gray-50 ${
-              isChecked
-                ? "border-gray-900 bg-gray-50 ring-1 ring-gray-900"
-                : "border-gray-200"
-            }`}
+            className={`perk-item ${isChecked ? "checked" : ""}`}
           >
             <input
               type="checkbox"

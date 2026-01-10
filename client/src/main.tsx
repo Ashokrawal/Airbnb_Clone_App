@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
 import App from "./App.tsx";
+import "react-toastify/dist/ReactToastify.css";
 
 // Use the aliases you configured!
 // Also, ensure the file names match (UserProvider vs UserProviders)

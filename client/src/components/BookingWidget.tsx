@@ -1,200 +1,204 @@
-import React, { useEffect, useState, type ChangeEvent } from "react";
+import React, { useEffect, useState, useMemo, ChangeEvent } from "react";
 import { Navigate } from "react-router-dom";
-import { differenceInDays } from "date-fns";
+import { differenceInDays, parseISO } from "date-fns";
 import { toast } from "react-toastify";
 
 import { useAuth } from "@/hooks";
-import axiosInstance from "@/utils/axios";
-import DatePickerWithRange from "./DatePickerWithRange";
+import "../styles/BookingWidget.css";
 
 interface Place {
   _id: string;
   price: number;
   maxGuests: number;
+  title: string;
 }
 
-interface BookingData {
-  noOfGuests: number;
-  name: string;
-  phone: string;
+interface BookingState {
+  date: {
+    checkIn: string;
+    checkOut: string;
+  };
+  guestDetails: {
+    count: number;
+    name: string;
+    phone: string;
+  };
 }
 
-interface DateRange {
-  from: Date | null;
-  to: Date | null;
-}
-
-interface BookingWidgetProps {
-  place: Place;
-}
-
-const BookingWidget: React.FC<BookingWidgetProps> = ({ place }) => {
-  const [dateRange, setDateRange] = useState<DateRange>({
-    from: null,
-    to: null,
-  });
-  const [bookingData, setBookingData] = useState<BookingData>({
-    noOfGuests: 1,
-    name: "",
-    phone: "",
-  });
-  const [redirect, setRedirect] = useState<string>("");
+const BookingWidget: React.FC<{ place: Place }> = ({ place }) => {
   const { user } = useAuth();
+  const [redirectData, setRedirectData] = useState<any>(null);
 
-  const { noOfGuests, name, phone } = bookingData;
-  const { _id: id, price } = place;
+  const [bookingData, setBookingData] = useState<BookingState>({
+    date: { checkIn: "", checkOut: "" },
+    guestDetails: { count: 1, name: "", phone: "" },
+  });
 
+  // Sync user info
   useEffect(() => {
     if (user) {
-      setBookingData((prev) => ({ ...prev, name: user.name }));
+      setBookingData((prev) => ({
+        ...prev,
+        guestDetails: { ...prev.guestDetails, name: user.name || "" },
+      }));
     }
   }, [user]);
 
-  const numberOfNights =
-    dateRange.from && dateRange.to
-      ? differenceInDays(
-          new Date(dateRange.to).setHours(0, 0, 0, 0),
-          new Date(dateRange.from).setHours(0, 0, 0, 0)
-        )
-      : 0;
+  // Logic to calculate nights
+  const numberOfNights = useMemo(() => {
+    const { checkIn, checkOut } = bookingData.date;
+    if (!checkIn || !checkOut) return 0;
+    const nights = differenceInDays(parseISO(checkOut), parseISO(checkIn));
+    return nights > 0 ? nights : 0;
+  }, [bookingData.date]);
 
-  const handleBookingData = (e: ChangeEvent<HTMLInputElement>) => {
+  // Handle Date Inputs
+  const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setBookingData((prev) => ({
       ...prev,
-      [name]: name === "noOfGuests" ? parseInt(value) || 0 : value,
+      date: { ...prev.date, [name]: value },
     }));
   };
 
-  const handleBooking = async () => {
-    if (!user) {
-      return setRedirect(`/login`);
-    }
+  // Fixed Guest Bug: Prevents NaN and out-of-bounds numbers
+  const handleGuestChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
 
-    if (numberOfNights < 1) {
-      return toast.error("Please select valid dates");
-    } else if (noOfGuests < 1) {
-      return toast.error("No. of guests can't be less than 1");
-    } else if (noOfGuests > place.maxGuests) {
-      return toast.error(`Allowed max. no. of guests: ${place.maxGuests}`);
-    } else if (name.trim() === "") {
-      return toast.error("Name can't be empty");
-    } else if (phone.trim() === "") {
-      return toast.error("Phone can't be empty");
-    }
+    if (name === "count") {
+      let val = parseInt(value);
+      if (isNaN(val) || val < 1) val = 1;
+      if (val > place.maxGuests) val = place.maxGuests;
 
-    try {
-      const response = await axiosInstance.post("/bookings", {
-        checkIn: dateRange.from,
-        checkOut: dateRange.to,
-        noOfGuests,
-        name,
-        phone,
-        place: id,
-        price: numberOfNights * price,
-      });
-
-      const bookingId = response.data.booking._id;
-      setRedirect(`/account/bookings/${bookingId}`);
-      toast("Congratulations! Enjoy your trip.");
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Booking Error: ", error);
+      setBookingData((prev) => ({
+        ...prev,
+        guestDetails: { ...prev.guestDetails, count: val },
+      }));
+    } else {
+      setBookingData((prev) => ({
+        ...prev,
+        guestDetails: { ...prev.guestDetails, [name]: value },
+      }));
     }
   };
 
-  if (redirect) {
-    return <Navigate to={redirect} />;
+  const handleReserve = () => {
+    const { checkIn, checkOut } = bookingData.date;
+    const { count, name, phone } = bookingData.guestDetails;
+
+    // Validations
+    if (!user) return setRedirectData({ path: "/login" });
+    if (!checkIn || !checkOut || numberOfNights <= 0) {
+      return toast.error("Please select valid check-in and check-out dates");
+    }
+    if (!name || !phone)
+      return toast.error("Please fill in your contact details");
+
+    const totalPrice = numberOfNights * place.price;
+
+    // Directly navigate to success page with state (No Axios)
+    setRedirectData({
+      path: "/booking-success",
+      state: {
+        bookingId: `BK-${Math.floor(Math.random() * 100000)}`, // Dummy ID for UI
+        place: place,
+        checkIn: checkIn,
+        checkOut: checkOut,
+        guests: count,
+        totalPrice: totalPrice,
+      },
+    });
+  };
+
+  if (redirectData) {
+    return (
+      <Navigate to={redirectData.path} state={redirectData.state} replace />
+    );
   }
 
   return (
     <div className="booking-widget-card">
-      {/* Price Header */}
       <div className="price-header">
         <span className="price-amount">₹{place.price.toLocaleString()}</span>
-        <span className="per-night"> / night</span>
+        <span className="per-night"> night</span>
       </div>
 
-      {/* Date Selection */}
-      <div className="booking-inputs-border">
-        <div className="date-inputs">
-          <DatePickerWithRange setDateRange={setDateRange} />
+      <div className="airbnb-input-group">
+        <div className="date-input-row">
+          <div className="input-cell half border-right">
+            <label>CHECK-IN</label>
+            <input
+              type="date"
+              name="checkIn"
+              value={bookingData.date.checkIn}
+              onChange={handleDateChange}
+            />
+          </div>
+          <div className="input-cell half">
+            <label>CHECKOUT</label>
+            <input
+              type="date"
+              name="checkOut"
+              value={bookingData.date.checkOut}
+              onChange={handleDateChange}
+            />
+          </div>
         </div>
 
-        {/* Number of Guests */}
-        <div className="input-box" style={{ borderTop: "1px solid #b0b0b0" }}>
+        <div className="input-cell border-top">
           <label>GUESTS</label>
           <input
             type="number"
-            name="noOfGuests"
-            placeholder={`Max ${place.maxGuests} guests`}
+            name="count"
             min={1}
             max={place.maxGuests}
-            value={noOfGuests}
-            onChange={handleBookingData}
+            value={bookingData.guestDetails.count}
+            onChange={handleGuestChange}
           />
         </div>
-      </div>
 
-      {/* Guest Details */}
-      <div className="guest-details-section">
-        <div className="input-group">
-          <label className="input-label">Full Name</label>
+        <div className="input-cell border-top">
+          <label>FULL NAME</label>
           <input
             type="text"
             name="name"
-            className="booking-input"
-            placeholder="Enter your full name"
-            value={name}
-            onChange={handleBookingData}
+            placeholder="Name on ID"
+            value={bookingData.guestDetails.name}
+            onChange={handleGuestChange}
           />
         </div>
-
-        <div className="input-group">
-          <label className="input-label">Phone Number</label>
+        <div className="input-cell border-top">
+          <label>PHONE NUMBER</label>
           <input
             type="tel"
             name="phone"
-            className="booking-input"
-            placeholder="Enter your phone number"
-            value={phone}
-            onChange={handleBookingData}
+            placeholder="Contact number"
+            value={bookingData.guestDetails.phone}
+            onChange={handleGuestChange}
           />
         </div>
       </div>
 
-      {/* Book Button */}
-      <button onClick={handleBooking} className="book-btn">
-        {numberOfNights > 0 ? (
-          <>
-            Reserve
-            <span style={{ marginLeft: "8px", fontWeight: 700 }}>
-              ₹{(numberOfNights * place.price).toLocaleString()}
-            </span>
-          </>
-        ) : (
-          "Check availability"
-        )}
+      <button onClick={handleReserve} className="book-btn">
+        {numberOfNights > 0 ? "Reserve" : "Check availability"}
       </button>
 
-      {/* Price Breakdown */}
       {numberOfNights > 0 && (
         <div className="price-breakdown">
-          <div className="price-breakdown-row">
-            <span>
+          <p className="notice">You won't be charged yet</p>
+          <div className="row">
+            <span className="underline">
               ₹{place.price.toLocaleString()} × {numberOfNights} nights
             </span>
             <span>₹{(numberOfNights * place.price).toLocaleString()}</span>
           </div>
-          <div className="price-breakdown-divider"></div>
-          <div className="price-breakdown-row price-breakdown-total">
-            <span>Total</span>
+          <div className="divider"></div>
+          <div className="row total">
+            <span>Total before taxes</span>
             <span>₹{(numberOfNights * place.price).toLocaleString()}</span>
           </div>
         </div>
       )}
-
-      <p className="booking-notice">You won't be charged yet</p>
     </div>
   );
 };

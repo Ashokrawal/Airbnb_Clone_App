@@ -1,0 +1,26 @@
+.date-picker-wrapper {
+  width: 100%;
+}
+
+.date-picker-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #222;
+  text-align: left;
+}
+
+.date-picker-button:hover {
+  background: transparent;
+}
+
+.date-picker-text {
+  flex: 1;
+  font-weight: 400;
+}

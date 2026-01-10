@@ -5,10 +5,13 @@ import Spinner from "@/components/Spinner";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
+import { Suspense } from "react";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "../styles/IndexPage.css";
+import { useSearch } from "@/providers/SearchProvider";
+import LazyRender from "@/components/LazyRender";
 
 const PLACES_API = "http://localhost:8000/api/v1/places";
 
@@ -28,10 +31,33 @@ interface SectionSliderProps {
   id: string;
   wishlist: string[];
   onToggleWishlist: (id: string) => void;
+  checkIn?: string;
+  checkOut?: string;
+  numberOfNights?: number;
 }
 
+const formatDateDisplay = (dateString: string) => {
+  if (!dateString) return "";
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return date.toLocaleDateString("en-US", {
+    month: "short", // "Jan"
+    day: "numeric", // 7
+  });
+};
+
 const SectionSlider = React.memo(
-  ({ title, data, id, wishlist, onToggleWishlist }: SectionSliderProps) => (
+  ({
+    title,
+    data,
+    id,
+    wishlist,
+    onToggleWishlist,
+    checkIn,
+    checkOut,
+    numberOfNights,
+  }: SectionSliderProps) => (
     <section className="slider-section" aria-labelledby={`title-${id}`}>
       <div className="section-header">
         <h2 id={`title-${id}`} className="section-title">
@@ -97,11 +123,7 @@ const SectionSlider = React.memo(
       >
         {data.map((place) => {
           const isFavorited = wishlist.includes(place._id);
-
-          // Get first photo from the photos array
           const firstPhoto = place.photos?.[0] || "";
-
-          // Convert Cloudinary publicId to full URL with optimizations
           const imageUrl = firstPhoto
             ? `https://res.cloudinary.com/djcgonxur/image/upload/f_auto,q_auto,w_600,ar_1:1,c_fill/${firstPhoto}`
             : "https://via.placeholder.com/600";
@@ -111,7 +133,16 @@ const SectionSlider = React.memo(
               <div className="listing-card">
                 <Link to={`/place?id=${place._id}`} className="card-link">
                   <div className="image-container">
-                    <img src={imageUrl} alt={place.title} loading="lazy" />
+                    <img
+                      loading="lazy"
+                      style={{
+                        width: "100%",
+                        aspectRatio: "1 / 1",
+                        objectFit: "cover",
+                      }}
+                      src={imageUrl}
+                      alt={place.title}
+                    />
                     <button
                       className={`heart-button ${isFavorited ? "is-active" : ""}`}
                       onClick={(e) => {
@@ -137,12 +168,22 @@ const SectionSlider = React.memo(
                         {place.title.substring(0, 30)}
                       </span>
                     </div>
+                    {/* Dates & host info */}
+                    <span className="subtitle2">
+                      {checkIn && checkOut && (
+                        <span>
+                          {formatDateDisplay(checkIn)}
+                          {checkOut ? ` - ${formatDateDisplay(checkOut)}` : ""}
+                        </span>
+                      )}{" "}
+                      • Individual
+                    </span>
+
                     <p className="subtitle2">
-                      {place.address} • {place.maxGuests} guests
-                    </p>
-                    <p className="price-row">
                       <span className="rating-pill">
-                        ₹{place.price} / night
+                        {numberOfNights && numberOfNights > 0
+                          ? `₹${place.price * numberOfNights} for ${numberOfNights} nights`
+                          : `₹${place.price} / night`}
                       </span>
                       <span className="rating-pill">
                         ★ {place.rating || "4.8"}
@@ -162,6 +203,18 @@ const SectionSlider = React.memo(
 const IndexPage: React.FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const { searchData } = useSearch();
+
+  // Calculate number of nights whenever checkIn/checkOut changes
+  const numberOfNights =
+    searchData.checkIn && searchData.checkOut
+      ? Math.ceil(
+          (new Date(searchData.checkOut).getTime() -
+            new Date(searchData.checkIn).getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      : 0;
 
   const [wishlist, setWishlist] = useState<string[]>(() => {
     try {
@@ -186,7 +239,6 @@ const IndexPage: React.FC = () => {
     const fetchPlaces = async () => {
       try {
         const { data } = await axios.get(PLACES_API);
-        // data is already an array of places
         setPlaces(data);
       } catch (err) {
         console.error("Failed to fetch listings", err);
@@ -202,37 +254,56 @@ const IndexPage: React.FC = () => {
   return (
     <main className="airbnb-page-wrapper">
       <div className="container">
-        <SectionSlider
-          title="Popular homes in London"
-          data={places.slice(7)}
-          id="london"
-          wishlist={wishlist}
-          onToggleWishlist={handleToggleWishlist}
-        />
+        <LazyRender height={320}>
+          <SectionSlider
+            title="Popular homes in London"
+            data={places.slice(7)}
+            id="london"
+            wishlist={wishlist}
+            onToggleWishlist={handleToggleWishlist}
+            checkIn={searchData.checkIn}
+            checkOut={searchData.checkOut}
+            numberOfNights={numberOfNights}
+          />
+        </LazyRender>
+        <LazyRender height={320}>
+          <SectionSlider
+            title="Explore stays in New York"
+            data={places.slice(13)}
+            id="newyork"
+            wishlist={wishlist}
+            onToggleWishlist={handleToggleWishlist}
+            checkIn={searchData.checkIn}
+            checkOut={searchData.checkOut}
+            numberOfNights={numberOfNights}
+          />
+        </LazyRender>
 
-        <SectionSlider
-          title="Explore stays in New York"
-          data={places.slice(13)}
-          id="newyork"
-          wishlist={wishlist}
-          onToggleWishlist={handleToggleWishlist}
-        />
+        <LazyRender height={320}>
+          <SectionSlider
+            title="Explore stays in Nepal"
+            data={places.slice(20)}
+            id="nepal"
+            wishlist={wishlist}
+            onToggleWishlist={handleToggleWishlist}
+            checkIn={searchData.checkIn}
+            checkOut={searchData.checkOut}
+            numberOfNights={numberOfNights}
+          />
+        </LazyRender>
 
-        <SectionSlider
-          title="Explore stays in Nepal"
-          data={places.slice(20)}
-          id="nepal"
-          wishlist={wishlist}
-          onToggleWishlist={handleToggleWishlist}
-        />
-
-        <SectionSlider
-          title="Explore stays in India"
-          data={places.slice(25)}
-          id="india"
-          wishlist={wishlist}
-          onToggleWishlist={handleToggleWishlist}
-        />
+        <LazyRender height={320}>
+          <SectionSlider
+            title="Explore stays in India"
+            data={places.slice(25)}
+            id="india"
+            wishlist={wishlist}
+            onToggleWishlist={handleToggleWishlist}
+            checkIn={searchData.checkIn}
+            checkOut={searchData.checkOut}
+            numberOfNights={numberOfNights}
+          />
+        </LazyRender>
       </div>
     </main>
   );

@@ -70,7 +70,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="mt-4 flex grow items-center justify-around p-4 md:p-0">
+    <div className="mt-4 login-page flex grow items-center  justify-around p-4 md:p-0">
       <div className="mb-40">
         <h1 className="mb-4 text-center text-4xl">Login</h1>
         <form className="mx-auto max-w-md" onSubmit={handleFormSubmit}>

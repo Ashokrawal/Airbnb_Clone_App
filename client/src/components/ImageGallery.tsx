@@ -26,6 +26,12 @@ const ImageGallery: React.FC<GalleryProps> = ({ photos }) => {
         <img
           src={convertToCloudinaryUrl(displayPhotos[0])}
           alt="Primary"
+          loading="lazy"
+          style={{
+            width: "100%",
+            aspectRatio: "1 / 1",
+            objectFit: "cover",
+          }}
           className="gallery-img"
         />
       </div>
@@ -36,6 +42,12 @@ const ImageGallery: React.FC<GalleryProps> = ({ photos }) => {
               src={convertToCloudinaryUrl(photo)}
               alt={`Side ${index}`}
               className="gallery-img"
+              loading="lazy"
+              style={{
+                width: "100%",
+                aspectRatio: "1 / 1",
+                objectFit: "cover",
+              }}
             />
           </div>
         ))}

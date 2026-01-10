@@ -1,0 +1,130 @@
+.booking-widget-card {
+  max-width: 380px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  margin: 20px auto;
+  font-family:
+    Circular,
+    -apple-system,
+    sans-serif;
+  box-sizing: border-box;
+}
+
+.price-header {
+  margin-bottom: 24px;
+}
+.price-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+}
+.per-night {
+  font-size: 16px;
+  color: #222;
+  font-weight: 400;
+}
+
+.airbnb-input-group {
+  border: 1px solid #b0b0b0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.date-input-row {
+  display: flex;
+}
+
+.input-cell {
+  padding: 10px 12px;
+  box-sizing: border-box;
+  background: white;
+}
+
+.input-cell label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #222;
+  margin-bottom: 2px;
+}
+
+.input-cell input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+  padding: 0;
+  color: #222;
+  font-family: inherit;
+}
+
+/* Basic Date Input styling to look cleaner */
+.basic-date-input {
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.half {
+  flex: 1;
+}
+.border-right {
+  border-right: 1px solid #b0b0b0;
+}
+.border-top {
+  border-top: 1px solid #b0b0b0;
+}
+
+.book-btn {
+  width: 100%;
+  background: linear-gradient(to right, #e61e4d, #d70466);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.book-btn:hover {
+  opacity: 0.9;
+}
+
+.price-breakdown {
+  margin-top: 24px;
+  border-top: 1px solid #ebebeb;
+  padding-top: 24px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #222;
+}
+.total {
+  font-weight: 700;
+  font-size: 18px;
+}
+.underline {
+  text-decoration: underline;
+}
+.notice {
+  text-align: center;
+  font-size: 14px;
+  color: #717171;
+  margin-bottom: 16px;
+}
+.divider {
+  height: 1px;
+  background: #ebebeb;
+  margin: 16px 0;
+}

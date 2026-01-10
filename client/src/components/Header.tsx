@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/index";
 import SearchBar from "./SearchBar";
 import "../styles/Header.css";
-import AuthModal from "./AuthModal";
-import { UserAvatar } from "./UserAvatar";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+const AuthModal = React.lazy(() => import("./AuthModal"));
+import { flushSync } from "react-dom";
 
 interface User {
   id: string;
@@ -23,6 +24,7 @@ export const Header: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,6 +52,21 @@ export const Header: React.FC = () => {
     setIsMenuOpen(false);
   };
 
+  const DefaultAvatarSVG = (
+    <svg viewBox="0 0 32 32" fill="currentColor" className="w-1/2 h-1/2">
+      <path d="M16 8a5 5 0 1 0 5 5 5 5 0 0 0 -5-5zm0 2a3 3 0 1 1 -3 3 3 3 0 0 1 3-3zm0 18c7 0 14 0 14-2a14 14 0 0 0 -28 0c0 2 7 2 14 2z" />
+    </svg>
+  );
+
+  const LOGO = (
+    <img
+      src="/Airbnb-Logo.wine.svg"
+      alt="Airbnb"
+      loading="lazy"
+      className="airbnb-logo"
+    />
+  );
+
   return (
     <>
       <header className={`main-header ${isExpanded ? "expanded" : "shrunk"}`}>
@@ -57,13 +74,7 @@ export const Header: React.FC = () => {
           <div
             className={`header-left hide-on-mobile ${!isExpanded ? "nav-hidden" : ""}`}
           >
-            <Link to="/">
-              <img
-                src="/Airbnb-Logo.wine.svg"
-                alt="Airbnb"
-                className="airbnb-logo"
-              />
-            </Link>
+            <Link to="/">{LOGO}</Link>
           </div>
 
           <div className="header-center hide-on-mobile">
@@ -92,6 +103,8 @@ export const Header: React.FC = () => {
             <div
               className="user-pill"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-expanded={isMenuOpen}
+              aria-haspopup="menu"
             >
               <svg
                 viewBox="0 0 32 32"
@@ -113,19 +126,10 @@ export const Header: React.FC = () => {
                   />
 
                   {/* This fallback only renders if src is null OR the image fails to load */}
-                  <AvatarFallback className="bg-zinc-800 text-white flex items-center justify-center font-medium">
-                    {user?.name ? (
-                      user.name.charAt(0).toUpperCase()
-                    ) : (
-                      /* The default Airbnb silhouette if no name exists */
-                      <svg
-                        viewBox="0 0 32 32"
-                        fill="currentColor"
-                        className="w-1/2 h-1/2"
-                      >
-                        <path d="M16 8a5 5 0 1 0 5 5 5 5 0 0 0 -5-5zm0 2a3 3 0 1 1 -3 3 3 3 0 0 1 3-3zm0 18c7 0 14 0 14-2a14 14 0 0 0 -28 0c0 2 7 2 14 2z" />
-                      </svg>
-                    )}
+                  <AvatarFallback className="avatar-fallback">
+                    {user?.name
+                      ? user.name.charAt(0).toUpperCase()
+                      : DefaultAvatarSVG}
                   </AvatarFallback>
                 </Avatar>
               </div>
@@ -148,7 +152,7 @@ export const Header: React.FC = () => {
                     </div>
                     <hr />
                     <div className="dropdown-section">
-                      <Link to="/host">Become a host</Link>
+                      <Link to="/becomeAHost">Become a host</Link>
                       <Link to="/help">Help Center</Link>
                     </div>
                   </>
@@ -174,8 +178,19 @@ export const Header: React.FC = () => {
                     </div>
                     <hr />
                     <div className="dropdown-section">
-                      <button onClick={() => logout()} className="logout-btn">
-                        Log out
+                      <button
+                        onClick={async () => {
+                          flushSync(() => {
+                            setIsLoggingOut(true);
+                            setIsMenuOpen(false);
+                          });
+
+                          await logout();
+                        }}
+                        className="logout-btn"
+                        disabled={isLoggingOut}
+                      >
+                        {isLoggingOut ? "Logging out..." : "Log out"}
                       </button>
                     </div>
                   </>
@@ -301,6 +316,11 @@ export const Header: React.FC = () => {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
+      {isLoggingOut && (
+        <div className="logout-overlay">
+          <div className="logout-spinner"></div>
+        </div>
+      )}
     </>
   );
 };

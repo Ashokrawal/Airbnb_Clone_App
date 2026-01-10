@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 
-// 1. Define the Place interface (Export this to use in other files)
 export interface Place {
   _id: string;
   photos: string[];
@@ -19,11 +18,10 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
 
   return (
     <Link
-      to={`/place/${placeId}`}
+      to={`/place?id=${placeId}`}
       className="group m-4 flex flex-col md:m-2 xl:m-0 transition-transform duration-200 hover:scale-[1.02]"
     >
       <div className="flex flex-col gap-1">
-        {/* Aspect ratio container ensures consistent image sizes in a grid */}
         <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-200">
           {photos?.[0] ? (
             <img

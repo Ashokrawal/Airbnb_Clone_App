@@ -8,16 +8,16 @@ import "../styles/Footer.css";
 
 const Layout = () => {
   return (
-    <>
+    <div className="app-layout">
       <div className="main-layout">
         <Header />
       </div>
 
-      <div className="layout">
+      <main className="layout">
         <Outlet />
-        <Footer />
-      </div>
-    </>
+      </main>
+      <Footer />
+    </div>
   );
 };
 

@@ -8,6 +8,7 @@ import {
   removeItemFromLocalStorage,
 } from "@/utils";
 import axiosInstance from "@/utils/axios";
+import { Navigate } from "react-router-dom";
 
 // --- 1. Define Shared Interfaces ---
 export interface User {
@@ -128,12 +129,16 @@ export const useProvideAuth = () => {
         setUser(null);
         removeItemFromLocalStorage("user");
         removeItemFromLocalStorage("token");
+        window.location.href = "/"; // THIS LINE
       }
     } catch (error) {
       console.error("Logout failed", error);
+      setUser(null);
+      removeItemFromLocalStorage("user");
+      removeItemFromLocalStorage("token");
+      window.location.href = "/"; // AND THIS LINE
     }
   };
-
   const uploadPicture = async (picture: File): Promise<string> => {
     const formData = new FormData();
     formData.append("picture", picture);

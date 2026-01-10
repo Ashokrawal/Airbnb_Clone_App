@@ -8,8 +8,9 @@ import IndexPage from "./pages/IndexPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import PlacesFormPage from "./pages/PlaceFormPage";
-import PlacesPage from "./pages/BookingWidget";
-import BookingsPage from "./pages/BookingsPage";
+
+import BookingWidget from "./components/BookingWidget"; // Case-sensitive!
+
 import SingleBookedPlace from "./pages/SingleBookedPlace";
 import NotFoundPage from "./pages/PageNotFound";
 import { Slide, ToastContainer } from "react-toastify";
@@ -22,6 +23,7 @@ import { MessagesPage } from "./pages/MessagesPage";
 import BecomeAHost from "./pages/BecomeAHost";
 import TripsPage from "./pages/TripsPage";
 import ScrollToTop from "./components/ScrollToTop";
+import BookingSuccess from "./pages/BookingSuccess";
 
 function App() {
   useEffect(() => {
@@ -50,6 +52,8 @@ function App() {
               path="/account/bookings/:id"
               element={<SingleBookedPlace />}
             />
+            <Route path="/booking-success" element={<BookingSuccess />} />
+
             <Route path="/trips" element={<TripsPage />} />
             <Route path="/wishlists" element={<WishlistsPage />} />
             <Route path="/messages" element={<MessagesPage />} />

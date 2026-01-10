@@ -5,12 +5,11 @@ import { toast } from "react-toastify";
 
 import axiosInstance from "@/utils/axios";
 
-import AccountNavigation from "@/components/AccontNavigation";
 import Perks from "@/components/Perks";
 import PhotosUploader from "@/components/PhotoUploader";
 import Spinner from "@/components/Spinner";
+import "../styles/PlacesFormPage.css";
 
-// 1. Define the Interface for the Place form data
 interface PlaceFormData {
   title: string;
   address: string;
@@ -29,7 +28,6 @@ const PlacesFormPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [addedPhotos, setAddedPhotos] = useState<string[]>([]);
 
-  // 2. Explicitly type the form state
   const [formData, setFormData] = useState<PlaceFormData>({
     title: "",
     address: "",
@@ -46,61 +44,40 @@ const PlacesFormPage: React.FC = () => {
     formData;
 
   const isValidPlaceData = (): boolean => {
-    if (title.trim() === "") {
-      toast.error("Title can't be empty!");
-      return false;
-    } else if (address.trim() === "") {
-      toast.error("Address can't be empty!");
-      return false;
-    } else if (addedPhotos.length < 5) {
-      toast.error("Upload at least 5 photos!");
-      return false;
-    } else if (description.trim() === "") {
-      toast.error("Description can't be empty!");
-      return false;
-    } else if (maxGuests < 1) {
-      toast.error("At least one guest is required!");
-      return false;
-    } else if (maxGuests > 10) {
-      toast.error("Max. guests can't be greater than 10");
-      return false;
-    }
+    if (!title.trim()) return toast.error("Title can't be empty!");
+    if (!address.trim()) return toast.error("Address can't be empty!");
+    if (addedPhotos.length < 5) return toast.error("Upload at least 5 photos!");
+    if (!description.trim()) return toast.error("Description can't be empty!");
+    if (maxGuests < 1) return toast.error("At least one guest is required!");
+    if (maxGuests > 10)
+      return toast.error("Max guests can't be greater than 10");
     return true;
   };
 
-  // 3. Typed Change Handler (supports input and textarea)
   const handleFormData = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
 
-    // Handle checkboxes (Perks)
     if (type === "checkbox") {
       const checkbox = e.target as HTMLInputElement;
-      const currentPerks = [...perks];
       const updatedPerks = checkbox.checked
-        ? [...currentPerks, name]
-        : currentPerks.filter((perk) => perk !== name);
-
+        ? [...perks, name]
+        : perks.filter((perk) => perk !== name);
       setFormData({ ...formData, perks: updatedPerks });
       return;
     }
 
-    // Handle number inputs
     const val = type === "number" ? parseInt(value) || 0 : value;
     setFormData({ ...formData, [name]: val });
   };
 
   useEffect(() => {
     if (!id) return;
-
     setLoading(true);
-    axiosInstance.get(`/places/${id}`).then((response) => {
-      const { place } = response.data;
-
-      // Update formData keys safely
-      setFormData((prev) => ({
-        ...prev,
+    axiosInstance.get(`/places/${id}`).then((res) => {
+      const { place } = res.data;
+      setFormData({
         title: place.title || "",
         address: place.address || "",
         description: place.description || "",
@@ -110,8 +87,7 @@ const PlacesFormPage: React.FC = () => {
         checkOut: place.checkOut || "",
         maxGuests: place.maxGuests || 10,
         price: place.price || 500,
-      }));
-
+      });
       setAddedPhotos([...place.photos]);
       setLoading(false);
     });
@@ -119,19 +95,16 @@ const PlacesFormPage: React.FC = () => {
 
   const savePlace = async (e: FormEvent) => {
     e.preventDefault();
+    if (!isValidPlaceData()) return;
 
-    if (isValidPlaceData()) {
-      const placeData = { ...formData, photos: addedPhotos };
-      try {
-        if (id) {
-          await axiosInstance.put("/places/update-place", { id, ...placeData });
-        } else {
-          await axiosInstance.post("/places/add-places", placeData);
-        }
-        setRedirect(true);
-      } catch (err) {
-        toast.error("Failed to save place.");
-      }
+    const placeData = { ...formData, photos: addedPhotos };
+    try {
+      if (id)
+        await axiosInstance.put("/places/update-place", { id, ...placeData });
+      else await axiosInstance.post("/places/add-places", placeData);
+      setRedirect(true);
+    } catch {
+      toast.error("Failed to save place.");
     }
   };
 
@@ -140,14 +113,13 @@ const PlacesFormPage: React.FC = () => {
 
   const preInput = (header: string, description: string) => (
     <>
-      <h2 className="mt-4 text-2xl">{header}</h2>
-      <p className="text-sm text-gray-500">{description}</p>
+      <h2>{header}</h2>
+      <p className="text-sm">{description}</p>
     </>
   );
 
   return (
-    <div className="p-4">
-      <AccountNavigation />
+    <div className="places-form-page-container">
       <form onSubmit={savePlace}>
         {preInput("Title", "Catchy title for your place")}
         <input
@@ -155,7 +127,7 @@ const PlacesFormPage: React.FC = () => {
           name="title"
           value={title}
           onChange={handleFormData}
-          placeholder="title, for example: My lovely apt"
+          placeholder="Title, for example: My lovely apt"
         />
 
         {preInput("Address", "Physical address")}
@@ -164,7 +136,7 @@ const PlacesFormPage: React.FC = () => {
           name="address"
           value={address}
           onChange={handleFormData}
-          placeholder="address"
+          placeholder="Address"
         />
 
         {preInput("Photos", "At least 5 photos")}
@@ -191,9 +163,9 @@ const PlacesFormPage: React.FC = () => {
         />
 
         {preInput("Number of guests & Price", "Limits and nightly rate")}
-        <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid">
           <div>
-            <h3 className="mt-2 -mb-1">Max no. of guests</h3>
+            <h3>Max no. of guests</h3>
             <input
               type="number"
               name="maxGuests"
@@ -202,7 +174,7 @@ const PlacesFormPage: React.FC = () => {
             />
           </div>
           <div>
-            <h3 className="mt-2 -mb-1">Price per night</h3>
+            <h3>Price per night</h3>
             <input
               type="number"
               name="price"
@@ -211,9 +183,8 @@ const PlacesFormPage: React.FC = () => {
             />
           </div>
         </div>
-        <button className="mx-auto my-4 flex rounded-full bg-primary py-3 px-20 text-xl font-semibold text-white">
-          Save
-        </button>
+
+        <button type="submit">Save</button>
       </form>
     </div>
   );
