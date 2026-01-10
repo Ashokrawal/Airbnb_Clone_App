@@ -18,7 +18,7 @@ Node.js/Express backend with MongoDB/Mongoose. Handles user authentication, data
 
 ## 🖼️ Media Management with Cloudinary
 - We implemented a robust image handling system that combines MongoDB for metadata storage and Cloudinary for high-performance asset delivery.
-- 
+  
 ## How it Works
 - Storage: Property images are hosted on Cloudinary. The MongoDB database stores the public_id and the secure url for each image.
 - Backend API: The Node/Express backend serves these URLs through the /api/v1/user/folder/home/photos endpoint.
