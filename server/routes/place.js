@@ -25,7 +25,7 @@ router.route("/update-place").put(isLoggedIn, updatePlace);
 
 // --- DYNAMIC ROUTES ---
 // These are placed last so they don't accidentally catch requests like "/add-places"
-router.route("/:id").get(singlePlace);
+router.get("/single", singlePlace);
 router.route("/search/:key").get(searchPlaces);
 
 export default router;

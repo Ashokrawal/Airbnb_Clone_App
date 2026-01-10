@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       default:
-        "https://res.cloudinary.com/djcgonxur/image/upload/v1767437305/airbnb/photos/no-profile_x8nlm7.webp",
+        "https://res.cloudinary.com/djcgonxur/image/upload/v1/home/airbnb/photos/default-avatar-user",
     },
   },
   { timestamps: true }

@@ -95,18 +95,6 @@ export const getPlaces = async (req, res) => {
   }
 };
 
-// 5. Get a specific listing by ID
-export const singlePlace = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const place = await Place.findById(id);
-    if (!place) return res.status(404).json({ message: "Place not found" });
-    res.status(200).json({ place });
-  } catch (err) {
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
 // 6. Search for listings by address
 export const searchPlaces = async (req, res) => {
   try {
@@ -121,5 +109,36 @@ export const searchPlaces = async (req, res) => {
     res.status(200).json(searchMatches);
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// placeController.js - Update singlePlace
+export const singlePlace = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(400).json({ message: "No ID provided" });
+    }
+
+    // Check if ID is a valid MongoDB ObjectId
+    const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+
+    let place;
+    if (isValidObjectId) {
+      // Search by MongoDB _id
+      place = await Place.findById(id).populate("owner", "name");
+    } else {
+      // Fallback: search by publicId in photos array
+      place = await Place.findOne({ photos: id }).populate("owner", "name");
+    }
+
+    if (!place) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    res.status(200).json({ place });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };

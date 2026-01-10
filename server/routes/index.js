@@ -7,6 +7,14 @@ import userRouter from "./user.js";
 import placeRouter from "./place.js";
 import bookingRouter from "./booking.js";
 
+import {
+  getUserProfile,
+  register,
+  login,
+  logout,
+} from "../controllers/userController.js";
+import { isLoggedIn } from "../middlewares/user.js"; // You'll need this!
+
 const router = Router();
 
 // Multer Setup: Temporary storage for incoming files

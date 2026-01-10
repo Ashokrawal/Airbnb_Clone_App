@@ -21,6 +21,7 @@ const placeSchema = new mongoose.Schema(
     extraInfo: String,
     maxGuests: Number,
     price: Number,
+    rating: { type: Number, default: 4.8 },
   },
   { timestamps: true }
 ); // Automatically adds 'createdAt' and 'updatedAt' fields

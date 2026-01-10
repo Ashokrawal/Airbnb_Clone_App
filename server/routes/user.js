@@ -9,8 +9,10 @@ import {
   googleLogin,
   uploadPicture,
   updateUserDetails,
+  getUserProfile,
   getImagesByFolder,
 } from "../controllers/userController.js";
+import { isLoggedIn } from "../middlewares/user.js";
 
 const router = Router();
 
@@ -22,6 +24,7 @@ router.post("/register", register);
 router.post("/login", login);
 router.post("/google/login", googleLogin);
 router.get("/logout", logout);
+
 // Add this line to your existing routes
 // Change this in your router file
 // router file
@@ -32,6 +35,7 @@ router.get("/logout", logout);
 // We use a specific path.
 // This bypasses the logic that is causing your server to crash.
 router.get("/folder/home/photos", getImagesByFolder);
+router.get("/profile", isLoggedIn, getUserProfile);
 
 // Profile Management
 // We use .single('picture') because a user can have only one profile pic

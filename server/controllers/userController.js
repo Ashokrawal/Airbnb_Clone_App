@@ -61,20 +61,25 @@ export const login = async (req, res) => {
 };
 
 // 3. Google Login
+
 export const googleLogin = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, picture } = req.body; // 1. Added picture here
 
     let user = await User.findOne({ email });
 
     if (!user) {
-      // Create a random password for Google users so the field isn't empty
       const tempPassword = Math.random().toString(36).slice(-10);
       user = await User.create({
         name,
         email,
         password: tempPassword,
+        picture, // 2. Save the Google picture here
       });
+    } else if (picture && user.picture.includes("default-avatar-user")) {
+      // 3. Optional: Update picture if the existing user only has the default one
+      user.picture = picture;
+      await user.save();
     }
 
     cookieToken(user, res);
@@ -88,7 +93,13 @@ export const uploadPicture = async (req, res) => {
   try {
     const { path } = req.file;
     const result = await cloudinary.uploader.upload(path, {
-      folder: "airbnb/Users", // Matches your "airbnb" collection
+      // Professional sub-folder for user avatars
+      folder: "home/airbnb/users/avatars",
+      // Rename the file to something unique using timestamp or userId
+      public_id: `avatar-${req.user.id}-${Date.now()}`,
+      transformation: [
+        { width: 400, height: 400, crop: "fill", gravity: "face" },
+      ],
     });
     res.status(200).json(result.secure_url);
   } catch (error) {
@@ -131,9 +142,10 @@ export const logout = async (req, res) => {
 // 7. Get All Images from a Folder
 // controllers/userController.js
 // controllers/userController.js
+// controllers/userController.js
 export const getImagesByFolder = async (req, res) => {
   try {
-    // Try the path without the "home" dashboard name
+    // Correcting the path based on your Terminal output
     const folderPath = "airbnb/photos";
 
     const result = await cloudinary.api.resources({
@@ -142,6 +154,10 @@ export const getImagesByFolder = async (req, res) => {
       max_results: 50,
     });
 
+    console.log(
+      `✅ Success! Found ${result.resources.length} images in ${folderPath}`
+    );
+
     const images = result.resources.map((file) => ({
       url: file.secure_url,
       publicId: file.public_id,
@@ -149,13 +165,31 @@ export const getImagesByFolder = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      count: images.length,
       images,
     });
   } catch (error) {
-    console.error("Cloudinary Error:", error);
-    res
-      .status(500)
-      .json({ message: "Could not fetch images", error: error.message });
+    console.error("Cloudinary Error:", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+// 8. Get Logged In User Details
+export const getUserProfile = async (req, res) => {
+  try {
+    // req.user is already set by your 'isLoggedIn' middleware
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
