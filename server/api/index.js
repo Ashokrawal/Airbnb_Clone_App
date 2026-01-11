@@ -42,22 +42,13 @@ app.use(
 app.use(
   cors({
     origin:
-      process.env.CLIENT_URL || "https://airbnb-clone-client-app.vercel.app/",
+      process.env.CLIENT_URL || "https://airbnb-clone-client-app.vercel.app",
     credentials: true,
   })
 );
 
 // 5. Routes
-app.use("/api/v1", router);
-
-// 6. Server Listener (MODIFIED FOR VERCEL)
-if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 8000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Local Server running on http://localhost:${PORT}`);
-  });
-}
-
+// Register the health check FIRST to verify the root works
 app.get("/", (req, res) => {
   res.json({
     status: "success",
@@ -66,4 +57,16 @@ app.get("/", (req, res) => {
   });
 });
 
+// Register your API routes
+app.use("/api/v1", router);
+
+// 6. Server Listener
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Local Server running on http://localhost:${PORT}`);
+  });
+}
+
+// ALWAYS keep the export as the very last line
 export default app;
