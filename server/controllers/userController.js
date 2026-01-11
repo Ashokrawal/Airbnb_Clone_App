@@ -61,7 +61,6 @@ export const login = async (req, res) => {
 };
 
 // 3. Google Login
-
 export const googleLogin = async (req, res) => {
   try {
     const { name, email, picture } = req.body; // 1. Added picture here
@@ -131,10 +130,11 @@ export const updateUserDetails = async (req, res) => {
 // 6. Logout
 export const logout = async (req, res) => {
   res.cookie("token", null, {
-    expires: new Date(Date.now()),
+    expires: new Date(0), // Set to past date to force delete
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: true, // Must be true for Vercel (HTTPS)
+    sameSite: "none", // Crucial for cross-domain cookies
+    path: "/", // Ensures it clears for all routes
   });
   res.status(200).json({ success: true, message: "Logged out" });
 };

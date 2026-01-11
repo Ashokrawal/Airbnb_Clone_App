@@ -9,6 +9,7 @@ const cookieToken = (user, res) => {
     httpOnly: true, // Prevents XSS attacks by hiding cookie from frontend JS
     secure: true, // Required for SameSite: 'none'
     sameSite: "none", // Essential for cross-origin (React on 5173, Express on 8000)
+    path: "/",
   };
 
   // Remove password from the user object before sending response for security

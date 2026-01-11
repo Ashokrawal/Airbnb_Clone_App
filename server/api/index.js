@@ -21,6 +21,8 @@ cloudinary.config({
 
 const app = express();
 
+app.set("trust proxy", 1); // Crucial for Vercel/Heroku/Render
+
 // 3. Middlewares
 app.use(express.json()); // Allows server to read JSON in request bodies
 
@@ -39,10 +41,22 @@ app.use(
 );
 
 // 4. CORS Setup (Crucial for Client-Server communication)
+// 4. CORS Setup
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://airbnb-clone-client-app.vercel.app",
+];
+
 app.use(
   cors({
-    origin:
-      process.env.CLIENT_URL || "https://airbnb-clone-client-app.vercel.app",
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        return callback(new Error("CORS policy violation"), false);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
