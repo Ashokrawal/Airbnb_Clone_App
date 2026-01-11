@@ -39,18 +39,27 @@ const PlacePage: React.FC = () => {
     const getPlace = async () => {
       setLoading(true);
       try {
-        // 1. Send the ID as a query parameter called 'id'
-        // This matches your singlePlace controller: const { id } = req.query;
-        const { data } = await axiosInstance.get(
-          `/places/single?id=${encodeURIComponent(id)}`
-        );
-        setPlace(data.place);
+        const { data } = await axiosInstance.get(`/places/single?id=${id}`);
+
+        // Log this to see the structure: Is it {place: {...}} or just {...}?
+        console.log("Single Place Data:", data);
+
+        // Professionally handle different backend response structures
+        if (data && data.place) {
+          setPlace(data.place);
+        } else if (data && data._id) {
+          setPlace(data); // The object was returned directly
+        } else {
+          setPlace(null);
+        }
       } catch (err) {
         console.error("Fetch error:", err);
+        setPlace(null);
       } finally {
         setLoading(false);
       }
     };
+
     getPlace();
   }, [id]);
 
