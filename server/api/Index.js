@@ -23,6 +23,7 @@ const app = express();
 
 // 3. Middlewares
 app.use(express.json()); // Allows server to read JSON in request bodies
+
 app.use(cookieParser()); // Allows server to read cookies
 
 // Security & Sessions
