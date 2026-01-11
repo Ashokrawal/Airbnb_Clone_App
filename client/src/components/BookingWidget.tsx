@@ -4,6 +4,7 @@ import { differenceInDays, parseISO } from "date-fns";
 import { toast } from "react-toastify";
 
 import { useAuth } from "@/hooks";
+import AuthModal from "./AuthModal";
 import "../styles/BookingWidget.css";
 
 interface Place {
@@ -28,6 +29,7 @@ interface BookingState {
 const BookingWidget: React.FC<{ place: Place }> = ({ place }) => {
   const { user } = useAuth();
   const [redirectData, setRedirectData] = useState<any>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const [bookingData, setBookingData] = useState<BookingState>({
     date: { checkIn: "", checkOut: "" },
@@ -52,16 +54,32 @@ const BookingWidget: React.FC<{ place: Place }> = ({ place }) => {
     return nights > 0 ? nights : 0;
   }, [bookingData.date]);
 
-  // Handle Date Inputs
+  // --- DATE LOGIC FIXES ---
+  const today = new Date().toISOString().split("T")[0];
+
   const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setBookingData((prev) => ({
-      ...prev,
-      date: { ...prev.date, [name]: value },
-    }));
+
+    setBookingData((prev) => {
+      const newData = { ...prev.date, [name]: value };
+
+      // BUG FIX: If check-in is set later than check-out, reset check-out
+      if (
+        name === "checkIn" &&
+        newData.checkOut &&
+        newData.checkIn >= newData.checkOut
+      ) {
+        newData.checkOut = "";
+      }
+
+      return {
+        ...prev,
+        date: newData,
+      };
+    });
   };
 
-  // Fixed Guest Bug: Prevents NaN and out-of-bounds numbers
+  // --- GUEST LOGIC FIXES ---
   const handleGuestChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -86,8 +104,11 @@ const BookingWidget: React.FC<{ place: Place }> = ({ place }) => {
     const { checkIn, checkOut } = bookingData.date;
     const { count, name, phone } = bookingData.guestDetails;
 
-    // Validations
-    if (!user) return setRedirectData({ path: "/login" });
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
     if (!checkIn || !checkOut || numberOfNights <= 0) {
       return toast.error("Please select valid check-in and check-out dates");
     }
@@ -96,11 +117,10 @@ const BookingWidget: React.FC<{ place: Place }> = ({ place }) => {
 
     const totalPrice = numberOfNights * place.price;
 
-    // Directly navigate to success page with state (No Axios)
     setRedirectData({
       path: "/booking-success",
       state: {
-        bookingId: `BK-${Math.floor(Math.random() * 100000)}`, // Dummy ID for UI
+        bookingId: `BK-${Math.floor(Math.random() * 100000)}`,
         place: place,
         checkIn: checkIn,
         checkOut: checkOut,
@@ -117,89 +137,99 @@ const BookingWidget: React.FC<{ place: Place }> = ({ place }) => {
   }
 
   return (
-    <div className="booking-widget-card">
-      <div className="price-header">
-        <span className="price-amount">₹{place.price.toLocaleString()}</span>
-        <span className="per-night"> night</span>
-      </div>
+    <>
+      <div className="booking-widget-card">
+        <div className="price-header">
+          <span className="price-amount">₹{place.price.toLocaleString()}</span>
+          <span className="per-night"> night</span>
+        </div>
 
-      <div className="airbnb-input-group">
-        <div className="date-input-row">
-          <div className="input-cell half border-right">
-            <label>CHECK-IN</label>
+        <div className="airbnb-input-group">
+          <div className="date-input-row">
+            <div className="input-cell half border-right">
+              <label>CHECK-IN</label>
+              <input
+                type="date"
+                name="checkIn"
+                min={today} // FIXED: Cannot pick past dates
+                value={bookingData.date.checkIn}
+                onChange={handleDateChange}
+              />
+            </div>
+            <div className="input-cell half">
+              <label>CHECKOUT</label>
+              <input
+                type="date"
+                name="checkOut"
+                // FIXED: Checkout min is check-in date
+                min={bookingData.date.checkIn || today}
+                value={bookingData.date.checkOut}
+                onChange={handleDateChange}
+              />
+            </div>
+          </div>
+
+          <div className="input-cell border-top">
+            <label>GUESTS</label>
             <input
-              type="date"
-              name="checkIn"
-              value={bookingData.date.checkIn}
-              onChange={handleDateChange}
+              type="number"
+              name="count"
+              min={1}
+              max={place.maxGuests}
+              value={bookingData.guestDetails.count}
+              onChange={handleGuestChange}
             />
           </div>
-          <div className="input-cell half">
-            <label>CHECKOUT</label>
+
+          <div className="input-cell border-top">
+            <label>FULL NAME</label>
             <input
-              type="date"
-              name="checkOut"
-              value={bookingData.date.checkOut}
-              onChange={handleDateChange}
+              type="text"
+              name="name"
+              placeholder="Name on ID"
+              value={bookingData.guestDetails.name}
+              onChange={handleGuestChange}
+            />
+          </div>
+          <div className="input-cell border-top">
+            <label>PHONE NUMBER</label>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Contact number"
+              value={bookingData.guestDetails.phone}
+              onChange={handleGuestChange}
             />
           </div>
         </div>
 
-        <div className="input-cell border-top">
-          <label>GUESTS</label>
-          <input
-            type="number"
-            name="count"
-            min={1}
-            max={place.maxGuests}
-            value={bookingData.guestDetails.count}
-            onChange={handleGuestChange}
-          />
-        </div>
+        <button onClick={handleReserve} className="book-btn">
+          {numberOfNights > 0 ? "Reserve" : "Check availability"}
+        </button>
 
-        <div className="input-cell border-top">
-          <label>FULL NAME</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Name on ID"
-            value={bookingData.guestDetails.name}
-            onChange={handleGuestChange}
-          />
-        </div>
-        <div className="input-cell border-top">
-          <label>PHONE NUMBER</label>
-          <input
-            type="tel"
-            name="phone"
-            placeholder="Contact number"
-            value={bookingData.guestDetails.phone}
-            onChange={handleGuestChange}
-          />
-        </div>
+        {numberOfNights > 0 && (
+          <div className="price-breakdown">
+            <p className="notice">You won't be charged yet</p>
+            <div className="row">
+              <span className="underline">
+                ₹{place.price.toLocaleString()} × {numberOfNights} nights
+              </span>
+              <span>₹{(numberOfNights * place.price).toLocaleString()}</span>
+            </div>
+            <div className="divider"></div>
+            <div className="row total">
+              <span>Total before taxes</span>
+              <span>₹{(numberOfNights * place.price).toLocaleString()}</span>
+            </div>
+          </div>
+        )}
       </div>
 
-      <button onClick={handleReserve} className="book-btn">
-        {numberOfNights > 0 ? "Reserve" : "Check availability"}
-      </button>
-
-      {numberOfNights > 0 && (
-        <div className="price-breakdown">
-          <p className="notice">You won't be charged yet</p>
-          <div className="row">
-            <span className="underline">
-              ₹{place.price.toLocaleString()} × {numberOfNights} nights
-            </span>
-            <span>₹{(numberOfNights * place.price).toLocaleString()}</span>
-          </div>
-          <div className="divider"></div>
-          <div className="row total">
-            <span>Total before taxes</span>
-            <span>₹{(numberOfNights * place.price).toLocaleString()}</span>
-          </div>
-        </div>
-      )}
-    </div>
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
+    </>
   );
 };
 

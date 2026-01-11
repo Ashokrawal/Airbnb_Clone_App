@@ -303,3 +303,14 @@
   text-decoration: underline;
   font-weight: 500;
 }
+
+/* Hide header when modal is open */
+body:has(.modal-overlay) .main-header,
+body:has(.modal-overlay) .search-bar-wrapper {
+  display: none !important;
+}
+
+/* Prevent body scroll when modal is open */
+body:has(.modal-overlay) {
+  overflow: hidden;
+}

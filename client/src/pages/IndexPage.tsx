@@ -63,6 +63,7 @@ const SectionSlider = React.memo(
         <h2 id={`title-${id}`} className="section-title">
           {title}
         </h2>
+
         <div className="custom-nav-container hide-on-mobile">
           <button className={`nav-btn prev-${id}`} aria-label="Previous stays">
             <svg
@@ -100,7 +101,7 @@ const SectionSlider = React.memo(
       <Swiper
         modules={[Navigation]}
         spaceBetween={12}
-        slidesPerView={2}
+        slidesPerView={2.2}
         navigation={{
           prevEl: `.prev-${id}`,
           nextEl: `.next-${id}`,
@@ -176,7 +177,7 @@ const SectionSlider = React.memo(
                           {checkOut ? ` - ${formatDateDisplay(checkOut)}` : ""}
                         </span>
                       )}{" "}
-                      • Individual
+                      • Host
                     </span>
 
                     <p className="subtitle2">

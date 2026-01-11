@@ -1,9 +1,9 @@
 /* --- Root & Global Styles --- */
 .airbnb-page-wrapper {
-  max-width: 100%; /* Changed from 1800px to ensure it fills widescreen */
+  max-width: 100%;
   margin: 0 auto;
-  padding: 24px 16px;
-  /* Official Airbnb Font Stack */
+  /* 🔥 Updated: 24px top/bottom and strictly 2px on the sides for mobile */
+  padding: 24px 2px;
   font-family:
     "Airbnb Cereal VF",
     Circular,
@@ -17,6 +17,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Desktop styles remain UNTOUCHED */
 @media (min-width: 768px) {
   .airbnb-page-wrapper {
     padding: 20px;
@@ -75,6 +76,14 @@
   background-color: #f3f3f3;
 }
 
+@media (max-width: 767px) {
+  .image-container {
+    width: 100%;
+    /* Maintained your 180px min-height constraint */
+    min-height: 180px;
+  }
+}
+
 .image-container img {
   width: 100%;
   height: 100%;
@@ -98,22 +107,13 @@
   justify-content: space-between;
   align-items: center;
 }
-
 .location-title {
-  font-weight: 600; /* Airbnb uses 600 for semi-bold titles */
+  font-weight: 600;
   font-size: 15px;
   line-height: 19px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-right: 5px;
-}
-
-.rating-pill {
-  font-size: 12px;
-  font-weight: 400;
-  margin-left: 10px;
-  color: #717171;
+  display: block;
+  padding: 0; /* Reset any padding */
+  margin: 0;
 }
 
 .subtitle {
@@ -124,12 +124,29 @@
   margin: 1px 0;
 }
 
+.rating-pill + .rating-pill::before {
+  content: "•";
+  margin: 0 4px;
+  color: #717171;
+}
+
 .subtitle2 {
   color: #717171;
   font-size: 12px;
   line-height: 19px;
   font-weight: 400;
   margin: 1px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rating-pill {
+  font-size: 12px;
+  font-weight: 400;
+  color: #717171;
+  /* 🔥 Removed fixed margin-left: 10px because it was pushing the text away from the edge */
+  margin-left: 0;
 }
 
 .price-row {

@@ -74,3 +74,15 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+/* Add this to your existing Layout.css */
+.main-layout.no-padding {
+  padding-bottom: 0 !important;
+}
+
+/* Ensure mobile is also reset */
+@media (max-width: 768px) {
+  .main-layout.no-padding {
+    padding-bottom: 0 !important;
+  }
+}
