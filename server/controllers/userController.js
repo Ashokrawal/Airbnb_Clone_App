@@ -139,10 +139,6 @@ export const logout = async (req, res) => {
   res.status(200).json({ success: true, message: "Logged out" });
 };
 
-// 7. Get All Images from a Folder
-// controllers/userController.js
-// controllers/userController.js
-// controllers/userController.js
 export const getImagesByFolder = async (req, res) => {
   try {
     // Correcting the path based on your Terminal output
