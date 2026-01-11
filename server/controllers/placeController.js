@@ -87,9 +87,11 @@ export const updatePlace = async (req, res) => {
 };
 
 // 4. Get all listings (for the Home Page)
+
 export const getPlaces = async (req, res) => {
   try {
-    res.status(200).json(await Place.find());
+    const places = await Place.find();
+    res.status(200).json(places);
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -121,15 +123,12 @@ export const singlePlace = async (req, res) => {
       return res.status(400).json({ message: "No ID provided" });
     }
 
-    // Check if ID is a valid MongoDB ObjectId
     const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(id);
-
     let place;
+
     if (isValidObjectId) {
-      // Search by MongoDB _id
       place = await Place.findById(id).populate("owner", "name");
     } else {
-      // Fallback: search by publicId in photos array
       place = await Place.findOne({ photos: id }).populate("owner", "name");
     }
 
@@ -137,6 +136,8 @@ export const singlePlace = async (req, res) => {
       return res.status(404).json({ message: "Listing not found" });
     }
 
+    // DO NOT transform photos here
+    // leave them as public IDs for frontend to handle
     res.status(200).json({ place });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
