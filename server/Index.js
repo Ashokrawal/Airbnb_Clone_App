@@ -48,10 +48,13 @@ app.use(
 // 5. Routes
 app.use("/api/v1", router);
 
-// 6. Server Listener
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is floating on http://localhost:${PORT}`);
-});
+// 6. Server Listener (MODIFIED FOR VERCEL)
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Local Server running on http://localhost:${PORT}`);
+  });
+}
 
+// Crucial: Vercel needs the app exported to handle the routing
 export default app;
