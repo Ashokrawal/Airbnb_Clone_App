@@ -125,4 +125,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 * **Phone:** +353 (0) 899567370
 * **Portfolio:** [ashokrawal.vercel.app](https://my-portfolio-bzef.vercel.app)
 
-Would you like me to add a section specifically for the **Cloudinary URL transformation** logic we wrote for the sliders?
+
