@@ -5,7 +5,6 @@ import Spinner from "@/components/Spinner";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
-import { Suspense } from "react";
 
 import "swiper/css";
 import "swiper/css/navigation";

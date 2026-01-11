@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, ChangeEvent } from "react";
+import React, { useEffect, useState, useMemo, type ChangeEvent } from "react";
 import { Navigate } from "react-router-dom";
 import { differenceInDays, parseISO } from "date-fns";
 import { toast } from "react-toastify";
