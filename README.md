@@ -1,4 +1,4 @@
-# Airbnb Clone - Full-Stack Vacation Rental Platform
+# Airbnb Clone - Full-Stack App
 
 A premium, full-stack vacation rental application inspired by Airbnb. Built with the MERN stack and integrated with Cloudinary for high-performance media delivery and Leaflet for interactive, cost-free mapping.
 
