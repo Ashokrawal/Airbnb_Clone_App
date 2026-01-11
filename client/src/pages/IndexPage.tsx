@@ -123,7 +123,9 @@ const SectionSlider = React.memo(
       >
         {data.map((place) => {
           const isFavorited = wishlist.includes(place._id);
+
           const firstPhoto = place.photos?.[0] || "";
+
           const imageUrl = firstPhoto
             ? `https://res.cloudinary.com/djcgonxur/image/upload/f_auto,q_auto,w_600,ar_1:1,c_fill/${firstPhoto}`
             : "https://via.placeholder.com/600";
