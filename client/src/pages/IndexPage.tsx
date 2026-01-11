@@ -12,7 +12,9 @@ import "../styles/IndexPage.css";
 import { useSearch } from "@/providers/SearchProvider";
 import LazyRender from "@/components/LazyRender";
 
-const PLACES_API = "http://localhost:8000/api/v1/places";
+// This allows the app to use localhost during dev, but use your Vercel URL in production
+const PLACES_API =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1/places";
 
 interface Place {
   _id: string;
