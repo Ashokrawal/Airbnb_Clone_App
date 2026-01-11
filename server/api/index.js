@@ -32,17 +32,18 @@ app.use(
     name: "session",
     maxAge: (process.env.COOKIE_TIME || 1) * 24 * 60 * 60 * 1000,
     keys: [process.env.SESSION_SECRET || "default_secret"],
-    secure: process.env.NODE_ENV === "production", // Only true in production (HTTPS)
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    httpOnly: true, // Prevents XSS attacks
+    httpOnly: true,
   })
 );
 
 // 4. CORS Setup (Crucial for Client-Server communication)
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true, // Allows cookies to be sent back and forth
+    origin:
+      process.env.CLIENT_URL || "https://airbnb-clone-client-app.vercel.app/",
+    credentials: true,
   })
 );
 
@@ -57,7 +58,6 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-// Add this to your index.js before your other routes
 app.get("/", (req, res) => {
   res.json({
     status: "success",
@@ -66,5 +66,4 @@ app.get("/", (req, res) => {
   });
 });
 
-// Crucial: Vercel needs the app exported to handle the routing
 export default app;
