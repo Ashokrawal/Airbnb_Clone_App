@@ -18,7 +18,8 @@ import { isLoggedIn } from "../middlewares/user.js"; // You'll need this!
 const router = Router();
 
 // Multer Setup: Temporary storage for incoming files
-const upload = multer({ dest: "/tmp" });
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // 1. Health Check Route
 router.get("/", (req, res) => {

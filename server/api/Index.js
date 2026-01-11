@@ -6,8 +6,8 @@ import cookieSession from "cookie-session";
 import { v2 as cloudinary } from "cloudinary";
 
 // Internal Imports
-import connectWithDB from "./config/db.js";
-import router from "./routes/index.js";
+import connectWithDB from "../config/db.js";
+import router from "../routes/index.js";
 
 // 1. Database Connection
 connectWithDB();
@@ -55,6 +55,15 @@ if (process.env.NODE_ENV !== "production") {
     console.log(`🚀 Local Server running on http://localhost:${PORT}`);
   });
 }
+
+// Add this to your index.js before your other routes
+app.get("/", (req, res) => {
+  res.json({
+    status: "success",
+    message: "Server is responsive and professionally styled!",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // Crucial: Vercel needs the app exported to handle the routing
 export default app;

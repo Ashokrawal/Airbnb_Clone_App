@@ -91,19 +91,19 @@ export const googleLogin = async (req, res) => {
 // 4. Upload Profile Picture
 export const uploadPicture = async (req, res) => {
   try {
-    const { path } = req.file;
-    const result = await cloudinary.uploader.upload(path, {
-      // Professional sub-folder for user avatars
+    // Vercel handles buffers better than temp paths
+    const fileBase64 = `data:${
+      req.file.mimetype
+    };base64,${req.file.buffer.toString("base64")}`;
+
+    const result = await cloudinary.uploader.upload(fileBase64, {
       folder: "home/airbnb/users/avatars",
-      // Rename the file to something unique using timestamp or userId
       public_id: `avatar-${req.user.id}-${Date.now()}`,
-      transformation: [
-        { width: 400, height: 400, crop: "fill", gravity: "face" },
-      ],
     });
+
     res.status(200).json(result.secure_url);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Upload failed" });
   }
 };
 
