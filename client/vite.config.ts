@@ -9,7 +9,13 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [react()],
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/test/setup.ts",
+  },
   base: "/",
+
   resolve: {
     alias: {
       // This bridges the gap so Vite understands "@"
